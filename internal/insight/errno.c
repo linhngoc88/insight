@@ -97,3 +97,18 @@ FILE* insight_set_stream(FILE* new_stream) {
   insight_stream = new_stream;
   return previous_stream;
 }
+
+void insight_stream_printf(const char* label, const char* file, int line,
+                           const char* reason) {
+  if (insight_stream == NULL) {
+    insight_stream = stderr;
+  }
+
+  if (insight_stream_handler) {
+    // It's a good practice to dereference function pointer here.
+    (*insight_stream_handler)(label, file, line, reason);
+    return;
+  }
+
+  fprintf(insight_stream, "insight: %s:%d: %s: %s\n", file, line, label, reason);
+}

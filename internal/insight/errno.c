@@ -87,3 +87,13 @@ insight_set_stream_handler(insight_stream_handler_t* new_handler) {
   insight_stream_handler = new_handler;
   return previous_handler;
 }
+
+FILE* insight_set_stream(FILE* new_stream) {
+  FILE* previous_stream;
+  if (insight_stream == NULL) {
+    insight_stream = stderr;
+  }
+  previous_stream = insight_stream;
+  insight_stream = new_stream;
+  return previous_stream;
+}

@@ -296,6 +296,21 @@ static void test_insight_set_stream_handler(void** state) {
   assert_ptr_equal(insight_stream_handler, &new_stream_handler);
 }
 
+static void test_insight_set_stream(void** state) {
+  (void) state;
+
+  extern FILE* insight_stream;
+  FILE* old_stream;
+
+  old_stream = insight_set_stream(stdout);
+  assert_ptr_equal(old_stream, stderr);
+  assert_ptr_equal(insight_stream, stdout);
+
+  old_stream = insight_set_stream(stderr);
+  assert_ptr_equal(old_stream, stdout);
+  assert_ptr_equal(insight_stream, stderr);
+}
+
 int main(void) {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(errno_success),
@@ -334,7 +349,8 @@ int main(void) {
     cmocka_unit_test(errno_etolg),
     cmocka_unit_test(errno_eof),
     cmocka_unit_test(errno_unknown),
-    cmocka_unit_test(test_insight_set_stream_handler)
+    cmocka_unit_test(test_insight_set_stream_handler),
+    cmocka_unit_test(test_insight_set_stream)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);

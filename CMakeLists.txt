@@ -15,15 +15,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${Insight_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${Insight_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${Insight_BINARY_DIR}/lib)
 
-message(STATUS "CMAKE_RUNTIME_OUTPUT_DIRECTORY: "
-  "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
-
-message(STATUS "CMAKE_LIBRARY_OUTPUT_DIRECTORY: "
-  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
-
-message(STATUS "CMAKE_ARCHIVE_OUTPUT_DIRECTORY: "
-  "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}")
-
 # Testing
 
 enable_testing()
@@ -37,3 +28,7 @@ if(BUILD_TESTING)
 endif()
 
 add_subdirectory(internal/insight)
+
+# Setup installation of Insight public headers.
+file(GLOB INSIGHT_HDRS ${Insight_SOURCE_DIR}/include/insight/*.h)
+install(FILES ${INSIGHT_HDRS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/insight)

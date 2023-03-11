@@ -1,13 +1,13 @@
 #include <string.h>
 #include "insight/malloc_wrappers.h"
 
-INSIGHT_MATRIX_TYPE *
-INSIGHT_MATRIX_FUNC(alloc) (const size_t num_rows, const size_t num_cols) {
+INSIGHT_MATRIX_TYPE*
+INSIGHT_MATRIX_FUNC(alloc)(const size_t num_rows, const size_t num_cols) {
   size_t elem_count = num_rows * num_cols;
   size_t elem_size = sizeof(INSIGHT_MATRIX_ELEM_TYPE);
 
-  INSIGHT_MATRIX_TYPE * matrix;
-  INSIGHT_MATRIX_ELEM_TYPE * elem;
+  INSIGHT_MATRIX_TYPE* matrix;
+  INSIGHT_MATRIX_ELEM_TYPE* elem;
 
   // TODO(linh): check to make sure that matrix and elem are not NULL before
   // proceeding. And also check for potential oveflow when num_rows * num_cols
@@ -24,13 +24,13 @@ INSIGHT_MATRIX_FUNC(alloc) (const size_t num_rows, const size_t num_cols) {
   return matrix;
 }
 
-INSIGHT_MATRIX_TYPE *
-INSIGHT_MATRIX_FUNC(calloc) (const size_t num_rows, const size_t num_cols) {
+INSIGHT_MATRIX_TYPE*
+INSIGHT_MATRIX_FUNC(calloc)(const size_t num_rows, const size_t num_cols) {
   size_t elem_count = num_rows * num_cols;
   size_t elem_size = sizeof(INSIGHT_MATRIX_ELEM_TYPE);
 
-  INSIGHT_MATRIX_TYPE * matrix;
-  INSIGHT_MATRIX_ELEM_TYPE * elem;
+  INSIGHT_MATRIX_TYPE* matrix;
+  INSIGHT_MATRIX_ELEM_TYPE* elem;
 
   // TODO(linh): check to make sure that matrix and elem are not NULL before
   // proceeding. And also check for potential oveflow when num_rows * num_cols
@@ -48,8 +48,7 @@ INSIGHT_MATRIX_FUNC(calloc) (const size_t num_rows, const size_t num_cols) {
   return matrix;
 }
 
-void
-INSIGHT_MATRIX_FUNC(free) (INSIGHT_MATRIX_TYPE * matrix) {
+void INSIGHT_MATRIX_FUNC(free)(INSIGHT_MATRIX_TYPE* matrix) {
   if (!matrix) { return; }
 
   if (matrix->owner) {
@@ -59,8 +58,7 @@ INSIGHT_MATRIX_FUNC(free) (INSIGHT_MATRIX_TYPE * matrix) {
   insight_free(matrix);
 }
 
-void
-INSIGHT_MATRIX_FUNC(set_zero) (INSIGHT_MATRIX_TYPE * matrix) {
+void INSIGHT_MATRIX_FUNC(set_zero)(INSIGHT_MATRIX_TYPE* matrix) {
   if (!matrix) { return; }
 
   size_t elem_count = matrix->num_rows * matrix->num_cols;
@@ -70,14 +68,13 @@ INSIGHT_MATRIX_FUNC(set_zero) (INSIGHT_MATRIX_TYPE * matrix) {
   memset(matrix->elem, 0, elem_count * elem_size);
 }
 
-void
-INSIGHT_MATRIX_FUNC(set_identity) (INSIGHT_MATRIX_TYPE * matrix) {
+void INSIGHT_MATRIX_FUNC(set_identity)(INSIGHT_MATRIX_TYPE* matrix) {
   if (!matrix) { return; }
 
   size_t i, j;
   const size_t num_rows = matrix->num_rows;
   const size_t num_cols = matrix->num_cols;
-  INSIGHT_MATRIX_ELEM_TYPE * const elem = matrix->elem;
+  INSIGHT_MATRIX_ELEM_TYPE* const elem = matrix->elem;
 
   const INSIGHT_MATRIX_ELEM_TYPE zero = INSIGHT_MATRIX_ELEM_ZERO;
   const INSIGHT_MATRIX_ELEM_TYPE one = INSIGHT_MATRIX_ELEM_ONE;
@@ -90,14 +87,14 @@ INSIGHT_MATRIX_FUNC(set_identity) (INSIGHT_MATRIX_TYPE * matrix) {
 }
 
 void
-INSIGHT_MATRIX_FUNC(set_value) (INSIGHT_MATRIX_TYPE * matrix,
-                                INSIGHT_MATRIX_ELEM_TYPE value) {
+INSIGHT_MATRIX_FUNC(set_value)(INSIGHT_MATRIX_TYPE* matrix,
+                               INSIGHT_MATRIX_ELEM_TYPE value) {
   if (!matrix) { return; }
 
   size_t i, j;
   const size_t num_rows = matrix->num_rows;
   const size_t num_cols = matrix->num_cols;
-  INSIGHT_MATRIX_ELEM_TYPE * const elem = matrix->elem;
+  INSIGHT_MATRIX_ELEM_TYPE* const elem = matrix->elem;
 
   for (i = 0; i < num_rows; ++i) {
     for (j = 0; j < num_cols; ++j) {

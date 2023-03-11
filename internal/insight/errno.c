@@ -1,6 +1,10 @@
 #include "insight/insight_errno.h"
 
-const char * insight_strerror(const int gsl_errno) {
+// Global variables
+FILE* insight_stream = NULL;
+insight_stream_handler_t* insight_stream_handler = NULL;
+
+const char* insight_strerror(const int gsl_errno) {
   switch (gsl_errno) {
   case INSIGHT_SUCCESS:
     return "success" ;
@@ -75,4 +79,11 @@ const char * insight_strerror(const int gsl_errno) {
   default:
     return "unknown error code";
   }
+}
+
+insight_stream_handler_t*
+insight_set_stream_handler(insight_stream_handler_t* new_handler) {
+  insight_stream_handler_t* previous_handler = insight_stream_handler;
+  insight_stream_handler = new_handler;
+  return previous_handler;
 }

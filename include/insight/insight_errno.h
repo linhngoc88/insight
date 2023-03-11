@@ -45,6 +45,32 @@ enum {
 
 
 // Similar to std:strerror()
-const char * insight_strerror(const int insight_errno);
+const char* insight_strerror(const int insight_errno);
+
+// Insight stream handler type
+typedef void (insight_stream_handler_t)(const char*, const char*, int, const char*);
+
+// Sets the global variable `insight_stream_handler` to the `new_handler` and
+// returns the previous stream handler.
+insight_stream_handler_t*
+insight_set_stream_handler(insight_stream_handler_t* new_handler);
+
+// Sets the global variable `insight_stream` to the given `new_stream` and
+// returns the previous stream.
+FILE* insight_set_stream(FILE* new_stream);
+
+// If the global variable `insight_stream_handler` is defined, then this
+// function equivalent to invoking
+//
+//   `insight_stream_handler(label, file, line, reason)`.
+//
+// Otherwise, it's equivalent to
+//
+//   `fprintf(insight_stream, "gsl: %s:%d: %s: %s\n", file, line, label, reason)`
+//
+// in which `insight_stream` is a global variable pointing to a stream.
+// (default to stderr).
+void insight_stream_printf(const char* label, const char* file, int line,
+                           const char* reason);
 
 #endif /* INSIGHT_ERRNO_H_ */

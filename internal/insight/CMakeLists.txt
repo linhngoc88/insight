@@ -1,6 +1,7 @@
 # List all internal source files. Do NOT use file(GLOB *) to find source!
 set(INSIGHT_SRCS
   hello.c
+  errno.c
   malloc_wrappers.c
   matrix_init.c)
 
@@ -48,5 +49,6 @@ if(BUILD_TESTING)
 
   # tests
   insight_test(hello)
+  insight_test(errno)
   insight_test(matrix_int)
 endif()

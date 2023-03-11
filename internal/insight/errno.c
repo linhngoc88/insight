@@ -1,0 +1,78 @@
+#include "insight/insight_errno.h"
+
+const char * insight_strerror(const int gsl_errno) {
+  switch (gsl_errno) {
+  case INSIGHT_SUCCESS:
+    return "success" ;
+  case INSIGHT_FAILURE:
+    return "failure" ;
+  case INSIGHT_CONTINUE:
+    return "the iteration has not converged yet";
+  case INSIGHT_EDOM:
+    return "input domain error";
+  case INSIGHT_ERANGE:
+    return "output range error";
+  case INSIGHT_EFAULT:
+    return "invalid pointer";
+  case INSIGHT_EINVAL:
+    return "invalid argument supplied by user";
+  case INSIGHT_EFAILED:
+    return "generic failure";
+  case INSIGHT_EFACTOR:
+    return "factorization failed";
+  case INSIGHT_ESANITY:
+    return "sanity check failed - shouldn't happen";
+  case INSIGHT_ENOMEM:
+    return "malloc failed";
+  case INSIGHT_EBADFUNC:
+    return "problem with user-supplied function";
+  case INSIGHT_ERUNAWAY:
+    return "iterative process is out of control";
+  case INSIGHT_EMAXITER:
+    return "exceeded max number of iterations";
+  case INSIGHT_EZERODIV:
+    return "tried to divide by zero";
+  case INSIGHT_EBADTOL:
+    return "specified tolerance is invalid or theoretically unattainable";
+  case INSIGHT_ETOL:
+    return "failed to reach the specified tolerance";
+  case INSIGHT_EUNDRFLW:
+    return "underflow";
+  case INSIGHT_EOVRFLW:
+    return "overflow";
+  case INSIGHT_ELOSS:
+    return "loss of accuracy";
+  case INSIGHT_EROUND:
+    return "roundoff error";
+  case INSIGHT_EBADLEN:
+    return "matrix/vector sizes are not conformant";
+  case INSIGHT_ENOTSQR:
+    return "matrix not square";
+  case INSIGHT_ESING:
+    return "singularity or extremely bad function behavior detected";
+  case INSIGHT_EDIVERGE:
+    return "integral or series is divergent";
+  case INSIGHT_EUNSUP:
+    return "the required feature is not supported by this hardware platform";
+  case INSIGHT_EUNIMPL:
+    return "the requested feature is not (yet) implemented";
+  case INSIGHT_ECACHE:
+    return "cache limit exceeded";
+  case INSIGHT_ETABLE:
+    return "table limit exceeded";
+  case INSIGHT_ENOPROG:
+    return "iteration is not making progress towards solution";
+  case INSIGHT_ENOPROGJ:
+    return "jacobian evaluations are not improving the solution";
+  case INSIGHT_ETOLF:
+    return "cannot reach the specified tolerance in F";
+  case INSIGHT_ETOLX:
+    return "cannot reach the specified tolerance in X";
+  case INSIGHT_ETOLG:
+    return "cannot reach the specified tolerance in gradient";
+  case INSIGHT_EOF:
+    return "end of file";
+  default:
+    return "unknown error code";
+  }
+}

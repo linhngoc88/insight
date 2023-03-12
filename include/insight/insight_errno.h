@@ -101,24 +101,24 @@ insight_error(const char* reason, const char* file, int line, int error_code);
 /* CONVINIENT MACROS */
 
 // INSIGHT_ERROR: call the error handler, and return the error code
-#define INSIGHT_ERROR(reason, error_code)                    \
-  do {                                                          \
-    insight_error(reason, __FILE__, __LINE__, error_code);   \
-    return error_code;                                       \
+#define INSIGHT_ERROR(reason, error_code)                   \
+  do {                                                      \
+    insight_error(reason, __FILE__, __LINE__, error_code);  \
+    return error_code;                                      \
   } while (0)
 
 // INSIGHT_ERROR_VAL: call the error handler, and return the given value
-#define INSIGHT_ERROR_VAL(reason, error_code, value)         \
-  do {                                                          \
-    insight_error(reason, __FILE__, __LINE__, error_code);   \
-    return value;                                               \
+#define INSIGHT_ERROR_VAL(reason, error_code, value)        \
+  do {                                                      \
+    insight_error(reason, __FILE__, __LINE__, error_code);  \
+    return value;                                           \
   } while (0)
 
 // INSIGHT_ERROR_VOID: call the error handler, and return.
-#define INSIGHT_ERROR_VOID(reason, error_code)               \
-  do {                                                          \
-    insight_error(reason, __FILE__, __LINE__, error_code);   \
-    return;                                                     \
+#define INSIGHT_ERROR_VOID(reason, error_code)              \
+  do {                                                      \
+    insight_error(reason, __FILE__, __LINE__, error_code);  \
+    return;                                                 \
   } while (0)
 
 #endif /* INSIGHT_ERRNO_H_ */

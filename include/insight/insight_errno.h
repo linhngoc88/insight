@@ -98,5 +98,27 @@ insight_error_handler_t* insight_set_error_handler_off(void);
 void insight_error(const char* reason, const char* file, int line,
                    int insight_errno);
 
+/* CONVINIENT MACROS */
+
+// INSIGHT_ERROR: call the error handler, and return the error code
+#define INSIGHT_ERROR(reason, insight_errno)                    \
+  do {                                                          \
+    insight_error(reason, __FILE__, __LINE__, insight_errno);   \
+    return insight_errno;                                       \
+  } while (0)
+
+// INSIGHT_ERROR_VAL: call the error handler, and return the given value
+#define INSIGHT_ERROR_VAL(reason, insight_errno, value)         \
+  do {                                                          \
+    insight_error(reason, __FILE__, __LINE__, insight_errno);   \
+    return value;                                               \
+  } while (0)
+
+// INSIGHT_ERROR_VOID: call the error handler, and return.
+#define INSIGHT_ERROR_VOID(reason, insight_errno)               \
+  do {                                                          \
+    insight_error(reason, __FILE__, __LINE__, insight_errno);   \
+    return;                                                     \
+  } while (0)
 
 #endif /* INSIGHT_ERRNO_H_ */

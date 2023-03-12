@@ -44,7 +44,7 @@ enum {
 
 
 // Similar to std:strerror()
-const char* insight_strerror(const int insight_errno);
+const char* insight_strerror(const int error_code);
 
 /* STREAM HANDLER */
 
@@ -78,7 +78,7 @@ void insight_stream_printf(const char* label, const char* file, int line,
 
 // Insight error handler type
 typedef void (insight_error_handler_t)(const char* reason, const char* file,
-                                       int line, int insight_errno);
+                                       int line, int error_code);
 
 // Sets the global variable `insight_error_handler` to the `new_handler` and
 // returns the previous handler.
@@ -92,32 +92,32 @@ insight_error_handler_t* insight_set_error_handler_off(void);
 // If the global variable `insight_error_handler` is not NULL, then this
 // function is equivalent to invoking
 //
-//   `insight_error_handler(reason, file, line, insight_errno)`
+//   `insight_error_handler(reason, file, line, error_code)`
 //
 // Otherwise, it flushes the output to stderr.
-void insight_error(const char* reason, const char* file, int line,
-                   int insight_errno);
+void
+insight_error(const char* reason, const char* file, int line, int error_code);
 
 /* CONVINIENT MACROS */
 
 // INSIGHT_ERROR: call the error handler, and return the error code
-#define INSIGHT_ERROR(reason, insight_errno)                    \
+#define INSIGHT_ERROR(reason, error_code)                    \
   do {                                                          \
-    insight_error(reason, __FILE__, __LINE__, insight_errno);   \
-    return insight_errno;                                       \
+    insight_error(reason, __FILE__, __LINE__, error_code);   \
+    return error_code;                                       \
   } while (0)
 
 // INSIGHT_ERROR_VAL: call the error handler, and return the given value
-#define INSIGHT_ERROR_VAL(reason, insight_errno, value)         \
+#define INSIGHT_ERROR_VAL(reason, error_code, value)         \
   do {                                                          \
-    insight_error(reason, __FILE__, __LINE__, insight_errno);   \
+    insight_error(reason, __FILE__, __LINE__, error_code);   \
     return value;                                               \
   } while (0)
 
 // INSIGHT_ERROR_VOID: call the error handler, and return.
-#define INSIGHT_ERROR_VOID(reason, insight_errno)               \
+#define INSIGHT_ERROR_VOID(reason, error_code)               \
   do {                                                          \
-    insight_error(reason, __FILE__, __LINE__, insight_errno);   \
+    insight_error(reason, __FILE__, __LINE__, error_code);   \
     return;                                                     \
   } while (0)
 

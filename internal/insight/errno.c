@@ -3,6 +3,11 @@
 // Global variables
 FILE* insight_stream = NULL;
 insight_stream_handler_t* insight_stream_handler = NULL;
+insight_error_handler_t* insight_error_handler = NULL;
+
+// The error handler that does nothing.
+/* static void no_error_handler(const char* reason, const char* file, int line, */
+/*                              int insight_errno); */
 
 const char* insight_strerror(const int gsl_errno) {
   switch (gsl_errno) {
@@ -111,4 +116,11 @@ void insight_stream_printf(const char* label, const char* file, int line,
   }
 
   fprintf(insight_stream, "insight: %s:%d: %s: %s\n", file, line, label, reason);
+}
+
+insight_error_handler_t*
+insight_set_error_handler(insight_error_handler_t* new_handler) {
+  insight_error_handler_t* previous_handler = insight_error_handler;
+  insight_error_handler = new_handler;
+  return previous_handler;
 }

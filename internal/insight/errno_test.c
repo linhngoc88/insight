@@ -262,7 +262,7 @@ static void errno_unknown(void** state) {
   assert_string_equal(actual_str, expected_str);
 }
 
-/* STREAM */
+/* STREAM HANDLER */
 
 static void old_stream_handler(const char*  label, const char*  file, int line,
                                const char*  reason) {
@@ -311,6 +311,38 @@ static void test_insight_set_stream(void** state) {
   assert_ptr_equal(insight_stream, stderr);
 }
 
+/* ERROR HANDLER */
+
+static void old_error_handler(const char* reason, const char* file, int line,
+                              int insight_errno) {
+  // Do nothing.
+  (void) reason;
+  (void) file;
+  (void) line;
+  (void) insight_errno;
+}
+
+static void new_error_handler(const char* reason, const char* file, int line,
+                              int insight_errno) {
+  // Do nothing.
+  (void) reason;
+  (void) file;
+  (void) line;
+  (void) insight_errno;
+}
+
+static void test_insight_set_error_handler(void** state) {
+  (void) state;
+  extern insight_error_handler_t* insight_error_handler;
+
+  insight_set_error_handler(&old_error_handler);
+  assert_ptr_equal(insight_error_handler, &old_error_handler);
+
+  insight_error_handler_t* ret = insight_set_error_handler(&new_error_handler);
+  assert_ptr_equal(ret, &old_error_handler);
+  assert_ptr_equal(insight_error_handler, &new_error_handler);
+}
+
 int main(void) {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(errno_success),
@@ -350,7 +382,8 @@ int main(void) {
     cmocka_unit_test(errno_eof),
     cmocka_unit_test(errno_unknown),
     cmocka_unit_test(test_insight_set_stream_handler),
-    cmocka_unit_test(test_insight_set_stream)
+    cmocka_unit_test(test_insight_set_stream),
+    cmocka_unit_test(test_insight_set_error_handler)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);

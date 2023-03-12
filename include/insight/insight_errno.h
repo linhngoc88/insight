@@ -47,6 +47,8 @@ enum {
 // Similar to std:strerror()
 const char* insight_strerror(const int insight_errno);
 
+/* STREAM HANDLER */
+
 // Insight stream handler type
 typedef void (insight_stream_handler_t)(const char*, const char*, int, const char*);
 
@@ -72,5 +74,30 @@ FILE* insight_set_stream(FILE* new_stream);
 // (default to stderr).
 void insight_stream_printf(const char* label, const char* file, int line,
                            const char* reason);
+
+/* ERROR HANDLER */
+
+// Insight error handler type
+typedef void (insight_error_handler_t)(const char* reason, const char* file,
+                                       int line, int insight_errno);
+
+// Sets the global variable `insight_error_handler` to the `new_handler` and
+// returns the previous handler.
+insight_error_handler_t*
+insight_set_error_handler(insight_error_handler_t* new_handler);
+
+// Sets the global variable `insight_error_handler` to the "do nothing" handler
+// and returns the previous handler.
+insight_error_handler_t* insight_set_error_handler_off(void);
+
+// If the global variable `insight_error_handler` is not NULL, then this
+// function is equivalent to invoking
+//
+//   `insight_error_handler(reason, file, line, insight_errno)`
+//
+// Otherwise, it flushes the output to stderr.
+void insight_error(const char* reason, const char* file, int line,
+                   int insight_errno);
+
 
 #endif /* INSIGHT_ERRNO_H_ */

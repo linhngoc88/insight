@@ -2,7 +2,6 @@
 #define INSIGHT_ERRNO_H_
 
 #include <stdio.h>
-#include <errno.h>
 
 /* Copied from gsl_errno.h */
 enum {

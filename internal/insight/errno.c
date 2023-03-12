@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "insight/insight_errno.h"
 
 // Global variables
@@ -6,8 +7,8 @@ insight_stream_handler_t* insight_stream_handler = NULL;
 insight_error_handler_t* insight_error_handler = NULL;
 
 // The error handler that does nothing.
-/* static void no_error_handler(const char* reason, const char* file, int line, */
-/*                              int insight_errno); */
+static void no_error_handler(const char* reason, const char* file, int line,
+                             int insight_errno);
 
 const char* insight_strerror(const int gsl_errno) {
   switch (gsl_errno) {
@@ -123,4 +124,36 @@ insight_set_error_handler(insight_error_handler_t* new_handler) {
   insight_error_handler_t* previous_handler = insight_error_handler;
   insight_error_handler = new_handler;
   return previous_handler;
+}
+
+insight_error_handler_t* insight_set_error_handler_off(void) {
+  insight_error_handler_t* previous_handler = insight_error_handler;
+  insight_error_handler = no_error_handler;
+  return previous_handler;
+}
+
+void insight_error(const char* reason, const char* file, int line,
+                   int insight_errno) {
+  if (insight_error_handler) {
+    (*insight_error_handler)(reason, file, line, insight_errno);
+    return;
+  }
+
+  insight_stream_printf("ERROR", file, line, reason);
+
+  fflush(stdout);
+  fprintf(stderr, "Default Insight error handler invoked.\n");
+  fflush(stderr);
+
+  abort();
+}
+
+static void no_error_handler(const char* reason, const char* file, int line,
+                             int insight_errno) {
+  // Do nothing
+  (void) reason;
+  (void) file;
+  (void) line;
+  (void) insight_errno;
+  return;
 }

@@ -2,11 +2,18 @@
 set(INSIGHT_SRCS
   errno.c
   malloc_wrappers.c
-  matrix_init.c)
+  matrix_init.c
+  block/init.c)
 
-# Depend on the header files so that they appear in IDEs.
-file(GLOB INSIGHT_INTERNAL_HDRS *.h)
-file(GLOB INSIGHT_PUBLIC_HDRS ${Insight_SOURCE_DIR}/include/ins/*.h)
+# Depend on the private header files so that they appear in IDEs.
+file(GLOB INSIGHT_INTERNAL_HDRS
+  *.h
+  block/*.h)
+
+# Alos depend on the private header files so that they appear in IDEs.
+file(GLOB INSIGHT_PUBLIC_HDRS
+  ${Insight_SOURCE_DIR}/include/ins/*.h
+  ${Insight_SOURCE_DIR}/include/ins/block/*.h)
 
 set(INSIGHT_LIBRARY_SOURCE
   ${INSIGHT_SRCS}

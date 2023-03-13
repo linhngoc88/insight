@@ -1,19 +1,19 @@
 #include <string.h>
-#include "insight/malloc_wrappers.h"
+#include "ins/malloc_wrappers.h"
 
-INSIGHT_MATRIX_TYPE*
-INSIGHT_MATRIX_FUNC(alloc)(const size_t num_rows, const size_t num_cols) {
+INS_MATRIX_TYPE*
+INS_MATRIX_FUNC(alloc)(const size_t num_rows, const size_t num_cols) {
   size_t elem_count = num_rows * num_cols;
-  size_t elem_size = sizeof(INSIGHT_MATRIX_ELEM_TYPE);
+  size_t elem_size = sizeof(INS_MATRIX_ELEM_TYPE);
 
-  INSIGHT_MATRIX_TYPE* matrix;
-  INSIGHT_MATRIX_ELEM_TYPE* elem;
+  INS_MATRIX_TYPE* matrix;
+  INS_MATRIX_ELEM_TYPE* elem;
 
   // TODO(linh): check to make sure that matrix and elem are not NULL before
   // proceeding. And also check for potential oveflow when num_rows * num_cols
   // is too big.
-  matrix = insight_malloc(1, sizeof(INSIGHT_MATRIX_TYPE));
-  elem = insight_malloc(elem_count, elem_size);
+  matrix = ins_malloc(1, sizeof(INS_MATRIX_TYPE));
+  elem = ins_malloc(elem_count, elem_size);
 
   // Initialize the matrix.
   matrix->num_rows = num_rows;
@@ -24,20 +24,20 @@ INSIGHT_MATRIX_FUNC(alloc)(const size_t num_rows, const size_t num_cols) {
   return matrix;
 }
 
-INSIGHT_MATRIX_TYPE*
-INSIGHT_MATRIX_FUNC(calloc)(const size_t num_rows, const size_t num_cols) {
+INS_MATRIX_TYPE*
+INS_MATRIX_FUNC(calloc)(const size_t num_rows, const size_t num_cols) {
   size_t elem_count = num_rows * num_cols;
-  size_t elem_size = sizeof(INSIGHT_MATRIX_ELEM_TYPE);
+  size_t elem_size = sizeof(INS_MATRIX_ELEM_TYPE);
 
-  INSIGHT_MATRIX_TYPE* matrix;
-  INSIGHT_MATRIX_ELEM_TYPE* elem;
+  INS_MATRIX_TYPE* matrix;
+  INS_MATRIX_ELEM_TYPE* elem;
 
   // TODO(linh): check to make sure that matrix and elem are not NULL before
   // proceeding. And also check for potential oveflow when num_rows * num_cols
   // is too big.
   // Should we rely on calloc or malloc and then memset?
-  matrix = insight_malloc(1, sizeof(INSIGHT_MATRIX_TYPE));
-  elem = insight_calloc(elem_count, elem_size);
+  matrix = ins_malloc(1, sizeof(INS_MATRIX_TYPE));
+  elem = ins_calloc(elem_count, elem_size);
 
   // Initialize the matrix.
   matrix->num_rows = num_rows;
@@ -48,36 +48,36 @@ INSIGHT_MATRIX_FUNC(calloc)(const size_t num_rows, const size_t num_cols) {
   return matrix;
 }
 
-void INSIGHT_MATRIX_FUNC(free)(INSIGHT_MATRIX_TYPE* matrix) {
+void INS_MATRIX_FUNC(free)(INS_MATRIX_TYPE* matrix) {
   if (!matrix) { return; }
 
   if (matrix->owner) {
-    insight_free(matrix->elem);
+    ins_free(matrix->elem);
   }
 
-  insight_free(matrix);
+  ins_free(matrix);
 }
 
-void INSIGHT_MATRIX_FUNC(set_zero)(INSIGHT_MATRIX_TYPE* matrix) {
+void INS_MATRIX_FUNC(set_zero)(INS_MATRIX_TYPE* matrix) {
   if (!matrix) { return; }
 
   size_t elem_count = matrix->num_rows * matrix->num_cols;
-  size_t elem_size = sizeof(INSIGHT_MATRIX_ELEM_TYPE);
+  size_t elem_size = sizeof(INS_MATRIX_ELEM_TYPE);
 
   // Initialize matrix to zero.
   memset(matrix->elem, 0, elem_count * elem_size);
 }
 
-void INSIGHT_MATRIX_FUNC(set_identity)(INSIGHT_MATRIX_TYPE* matrix) {
+void INS_MATRIX_FUNC(set_identity)(INS_MATRIX_TYPE* matrix) {
   if (!matrix) { return; }
 
   size_t i, j;
   const size_t num_rows = matrix->num_rows;
   const size_t num_cols = matrix->num_cols;
-  INSIGHT_MATRIX_ELEM_TYPE* const elem = matrix->elem;
+  INS_MATRIX_ELEM_TYPE* const elem = matrix->elem;
 
-  const INSIGHT_MATRIX_ELEM_TYPE zero = INSIGHT_MATRIX_ELEM_ZERO;
-  const INSIGHT_MATRIX_ELEM_TYPE one = INSIGHT_MATRIX_ELEM_ONE;
+  const INS_MATRIX_ELEM_TYPE zero = INS_MATRIX_ELEM_ZERO;
+  const INS_MATRIX_ELEM_TYPE one = INS_MATRIX_ELEM_ONE;
 
   for (i = 0; i < num_rows; ++i) {
     for (j = 0; j < num_cols; ++j) {
@@ -87,14 +87,14 @@ void INSIGHT_MATRIX_FUNC(set_identity)(INSIGHT_MATRIX_TYPE* matrix) {
 }
 
 void
-INSIGHT_MATRIX_FUNC(set_value)(INSIGHT_MATRIX_TYPE* matrix,
-                               INSIGHT_MATRIX_ELEM_TYPE value) {
+INS_MATRIX_FUNC(set_value)(INS_MATRIX_TYPE* matrix,
+                               INS_MATRIX_ELEM_TYPE value) {
   if (!matrix) { return; }
 
   size_t i, j;
   const size_t num_rows = matrix->num_rows;
   const size_t num_cols = matrix->num_cols;
-  INSIGHT_MATRIX_ELEM_TYPE* const elem = matrix->elem;
+  INS_MATRIX_ELEM_TYPE* const elem = matrix->elem;
 
   for (i = 0; i < num_rows; ++i) {
     for (j = 0; j < num_cols; ++j) {

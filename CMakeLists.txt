@@ -27,8 +27,8 @@ if(BUILD_TESTING)
   endif()
 endif()
 
-add_subdirectory(internal/insight)
+add_subdirectory(internal/ins)
 
 # Setup installation of Insight public headers.
-file(GLOB INSIGHT_HDRS ${Insight_SOURCE_DIR}/include/insight/*.h)
-install(FILES ${INSIGHT_HDRS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/insight)
+file(GLOB INSIGHT_HDRS ${Insight_SOURCE_DIR}/include/ins/*.h)
+install(FILES ${INSIGHT_HDRS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ins)

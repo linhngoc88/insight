@@ -3,13 +3,13 @@
 #include <stdint.h>
 #include <setjmp.h>
 #include <cmocka.h>
-#include "insight/insight_matrix.h"
+#include "ins/ins_matrix.h"
 
 
 static void alloc_success(void** state) {
   (void) state; /* unused */
 
-  insight_matrix_int* matrix = insight_matrix_int_alloc(2, 3);
+  ins_matrix_int* matrix = ins_matrix_int_alloc(2, 3);
 
   assert_non_null(matrix);
   assert_non_null(matrix->elem);
@@ -18,13 +18,13 @@ static void alloc_success(void** state) {
   assert_int_equal(matrix->num_cols, 3);
   assert_true(matrix->owner);
 
-  insight_matrix_int_free(matrix);
+  ins_matrix_int_free(matrix);
 }
 
 static void calloc_success(void** state) {
   (void) state; /* unused */
 
-  insight_matrix_int* matrix = insight_matrix_int_calloc(2, 3);
+  ins_matrix_int* matrix = ins_matrix_int_calloc(2, 3);
 
   assert_non_null(matrix);
   assert_non_null(matrix->elem);
@@ -45,14 +45,14 @@ static void calloc_success(void** state) {
     }
   }
 
-  insight_matrix_int_free(matrix);
+  ins_matrix_int_free(matrix);
 }
 
 static void set_zero_success(void** state) {
   (void) state; /* unused */
 
-  insight_matrix_int* matrix = insight_matrix_int_alloc(2, 3);
-  insight_matrix_int_set_zero(matrix);
+  ins_matrix_int* matrix = ins_matrix_int_alloc(2, 3);
+  ins_matrix_int_set_zero(matrix);
 
   size_t i, j;
   const int* elem = matrix->elem;
@@ -72,14 +72,14 @@ static void set_zero_success(void** state) {
   };
 
   assert_memory_equal(elem, expected_elem, num_rows * num_cols * sizeof(int));
-  insight_matrix_int_free(matrix);
+  ins_matrix_int_free(matrix);
 }
 
 static void set_identity_success(void** state) {
   (void) state; /* unused */
 
-  insight_matrix_int* matrix = insight_matrix_int_alloc(2, 2);
-  insight_matrix_int_set_identity(matrix);
+  ins_matrix_int* matrix = ins_matrix_int_alloc(2, 2);
+  ins_matrix_int_set_identity(matrix);
 
   const int* elem = matrix->elem;
   const size_t num_rows = matrix->num_rows;
@@ -108,14 +108,14 @@ static void set_identity_success(void** state) {
   };
 
   assert_memory_equal(elem, expected_elem, num_rows * num_cols * sizeof(int));
-  insight_matrix_int_free(matrix);
+  ins_matrix_int_free(matrix);
 }
 
 static void set_value_success(void** state) {
   (void) state; /* unused */
 
-  insight_matrix_int* matrix = insight_matrix_int_alloc(2, 3);
-  insight_matrix_int_set_value(matrix, 4);
+  ins_matrix_int* matrix = ins_matrix_int_alloc(2, 3);
+  ins_matrix_int_set_value(matrix, 4);
 
   const int * elem = matrix->elem;
   const size_t num_rows = matrix->num_rows;
@@ -137,7 +137,7 @@ static void set_value_success(void** state) {
   };
 
   assert_memory_equal(elem, expected_elem, num_rows * num_cols * sizeof(int));
-  insight_matrix_int_free(matrix);
+  ins_matrix_int_free(matrix);
 }
 
 int main(void) {

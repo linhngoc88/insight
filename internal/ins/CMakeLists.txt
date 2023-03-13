@@ -64,4 +64,5 @@ if(BUILD_TESTING)
   # tests
   ins_test(. errno)
   ins_test(. matrix_int)
+  ins_test(block block_double)
 endif()

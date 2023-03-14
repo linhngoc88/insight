@@ -13,11 +13,11 @@ INS_BLOCK_TYPE * INS_BLOCK_FUNC(alloc)(const size_t count) {
   if (block == 0) { return 0; }
 
   // Allocate memory for the block elements.
-  block->base = (INS_NUMERIC_TYPE *) malloc(count * sizeof(INS_NUMERIC_TYPE));
+  block->data = (INS_NUMERIC_TYPE *) malloc(count * sizeof(INS_NUMERIC_TYPE));
 
   // If block data allocation failed, free the allocated block, call the error
   // handler, and return 0 as the result.
-  if (block->base == 0 && count > 0) {
+  if (block->data == 0 && count > 0) {
     free(block);
     INS_ERROR_VAL("failed to allocate space for block data", INS_ENOMEM, 0);
   }
@@ -32,11 +32,11 @@ INS_BLOCK_TYPE * INS_BLOCK_FUNC(calloc)(const size_t count) {
   if (block == 0) { return 0; }
 
   // Allocate memory for the block elements and initialize elements to 0
-  block->base = (INS_NUMERIC_TYPE *) calloc(count, sizeof(INS_NUMERIC_TYPE));
+  block->data = (INS_NUMERIC_TYPE *) calloc(count, sizeof(INS_NUMERIC_TYPE));
 
   // If block data allocation failed, free the allocated block, call the error
   // handler, and return 0 as the result.
-  if (block->base == 0 && count > 0) {
+  if (block->data == 0 && count > 0) {
     free(block);
     INS_ERROR_VAL("failed to allocate space for block data", INS_ENOMEM, 0);
   }
@@ -47,7 +47,7 @@ INS_BLOCK_TYPE * INS_BLOCK_FUNC(calloc)(const size_t count) {
 
 void INS_BLOCK_FUNC(free)(INS_BLOCK_TYPE * block) {
   if (block == 0) { return; }
-  free(block->base);
+  free(block->data);
   free(block);
 }
 

@@ -12,7 +12,7 @@ static void alloc_success(void **state) {
   ins_block * block = ins_block_alloc(3);
 
   assert_non_null(block);
-  assert_non_null(block->base);
+  assert_non_null(block->data);
   assert_int_equal(block->size, 3);
 
   ins_block_free(block);

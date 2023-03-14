@@ -5,11 +5,11 @@
 #include <ins/ins_errno.h>
 
 // The `ins_block_struct` structure contains two components, the `size` and
-// the `base`. `size` is the number of doubles in the block and `base` is the
+// the `data`. `size` is the number of doubles in the block and `data` is the
 // pointer pointing to the allocated memory.
 struct ins_block_struct {
   size_t size;
-  double * base;
+  double * data;
 };
 
 typedef struct ins_block_struct ins_block;

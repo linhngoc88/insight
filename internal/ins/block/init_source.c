@@ -51,6 +51,36 @@ void INS_BLOCK_FUNC(free)(INS_BLOCK_TYPE * block) {
   free(block);
 }
 
+int INS_BLOCK_FUNC(fread)(INS_BLOCK_TYPE * block, FILE * stream) {
+  const size_t nitems = block->size;
+  const size_t size = sizeof(INS_NUMERIC_TYPE);
+  const size_t nitems_read = fread(block->data, size, nitems, stream);
+
+  // If the number of items read from the stream is not equal to the number
+  // of items preallocated in the block, call the error handler and return
+  // the error code `INS_EFAILED`.
+  if (nitems_read != nitems) {
+    INS_ERROR("fread failed", INS_EFAILED);
+  }
+
+  return 0;
+}
+
+int INS_BLOCK_FUNC(fwrite)(const INS_BLOCK_TYPE * block, FILE * stream) {
+  const size_t nitems = block->size;
+  const size_t size = sizeof(INS_NUMERIC_TYPE);
+  const size_t nitems_written = fwrite(block->data, size, nitems, stream);
+
+  // If the number of items written to the stream is not equal to the number
+  // of items in the block, call the error handler and return the error code
+  // `INS_EFAILED`.
+  if (nitems_written != nitems) {
+    INS_ERROR("fwrite failed", INS_EFAILED);
+  }
+
+  return 0;
+}
+
 static INS_BLOCK_TYPE * allocate_empty_block() {
   // Allocate memory for block struct.
   INS_BLOCK_TYPE * block;

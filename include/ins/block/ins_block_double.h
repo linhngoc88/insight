@@ -38,11 +38,11 @@ void ins_block_free(ins_block * block);
 // since the function uses the size of `block` to determine how many bytes to
 // read. The return value is `0` for success and `INS_EFAILED` if there was a
 // problem reading from the file. (`man fread` for more details).
-int ins_block_fread(FILE * stream, ins_block * block);
+int ins_block_fread(ins_block * block, FILE * stream);
 
 // Writes the elements of the given `block` to the specified stream `stream`
 // in binary format. The return value is `0` for success and `INS_EFAILED`
 // if there was a problem writing to the file. (`man fwrite` for more details).
-int ins_block_fwrite(FILE * stream, const ins_block * block);
+int ins_block_fwrite(const ins_block * block, FILE * stream);
 
 #endif // INS_BLOCK_DOUBLE_H_

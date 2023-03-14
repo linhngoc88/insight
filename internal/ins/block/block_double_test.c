@@ -24,7 +24,7 @@ static void calloc_success(void **state) {
   assert_non_null(block->data);
   assert_int_equal(block->size, 3);
 
-  double expected_mem[] = {0.0, 0.0, 0.0};
+  const double expected_mem[] = {0.0, 0.0, 0.0};
   assert_memory_equal(block->data, expected_mem, block->size * sizeof(double));
   ins_block_free(block);
 }

@@ -45,4 +45,18 @@ int ins_block_fread(ins_block * block, FILE * stream);
 // if there was a problem writing to the file. (`man fwrite` for more details).
 int ins_block_fwrite(const ins_block * block, FILE * stream);
 
+// Writes elements of the given block `block` line-by-line to the specified
+// stream `stream` using the format specifier `format`, which should be one
+// of `%g`, `%e` or `%f` formats for floating point numbers and `%d` for
+// integers. The return value is `0` for success and `INS_EFAILED` if there
+// was a problem writing to the file.
+int ins_block_fprintf(const ins_block *block, FILE *stream, const char *format);
+
+// Reads formatted data from the given stream `stream` into the specified
+// block `block`. The block `block` must be preallocated with the correct
+// length since the function uses the size of `block` to determine how many
+// numbers to read. The function returns `0` for success and `INS_EFAILED`
+// if there was a problem reading from the file.
+int ins_block_fscanf(ins_block *block, FILE *stream);
+
 #endif // INS_BLOCK_DOUBLE_H_

@@ -4,8 +4,6 @@
 #include <setjmp.h>
 #include <cmocka.h>
 #include <ins/ins_block.h>
-#include <errno.h>
-#include <string.h>
 
 
 static void alloc_success(void **state) {

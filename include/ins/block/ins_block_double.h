@@ -14,6 +14,8 @@ struct ins_block_struct {
 
 typedef struct ins_block_struct ins_block;
 
+/* Allocation */
+
 // Allocates memory for a block of `count` doubles and returns a pointer to the
 // block struct. The block is not initialized and so the values of its elements
 // are undefined.
@@ -28,5 +30,19 @@ ins_block * ins_block_calloc(const size_t count);
 // Frees the memory used by a block `block` previously allocated with either
 // `ins_block_alloc` or `ins_block_calloc`.
 void ins_block_free(ins_block * block);
+
+/* Operation */
+
+// Reads into the block `block` from the given open stream `stream` in binary
+// format. The block `block` must be preallocated with the correct length
+// since the function uses the size of `block` to determine how many bytes to
+// read. The return value is `0` for success and `INS_EFAILED` if there was a
+// problem reading from the file. (`man fread` for more details).
+int ins_block_fread(FILE * stream, ins_block * block);
+
+// Writes the elements of the given `block` to the specified stream `stream`
+// in binary format. The return value is `0` for success and `INS_EFAILED`
+// if there was a problem writing to the file. (`man fwrite` for more details).
+int ins_block_fwrite(FILE * stream, const ins_block * block);
 
 #endif // INS_BLOCK_DOUBLE_H_

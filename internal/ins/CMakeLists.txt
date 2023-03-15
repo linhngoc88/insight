@@ -1,12 +1,17 @@
 # List all internal source files. Do NOT use file(GLOB *) to find source!
 set(INSIGHT_SRCS
   errno.c
-  malloc_wrappers.c
-  matrix_init.c)
+  block/init.c)
 
-# Depend on the header files so that they appear in IDEs.
-file(GLOB INSIGHT_INTERNAL_HDRS *.h)
-file(GLOB INSIGHT_PUBLIC_HDRS ${Insight_SOURCE_DIR}/include/ins/*.h)
+# Depend on the private header files so that they appear in IDEs.
+file(GLOB INSIGHT_INTERNAL_HDRS
+  *.h
+  block/*.h)
+
+# Alos depend on the private header files so that they appear in IDEs.
+file(GLOB INSIGHT_PUBLIC_HDRS
+  ${Insight_SOURCE_DIR}/include/ins/*.h
+  ${Insight_SOURCE_DIR}/include/ins/block/*.h)
 
 set(INSIGHT_LIBRARY_SOURCE
   ${INSIGHT_SRCS}
@@ -29,8 +34,8 @@ install(TARGETS ins
 include(AppendTargetProperty)
 
 if(BUILD_TESTING)
-  macro (INS_TEST NAME)
-    add_executable(${NAME}_test ${NAME}_test.c)
+  macro (INS_TEST DIR NAME)
+    add_executable(${NAME}_test ${DIR}/${NAME}_test.c)
 
     target_include_directories(${NAME}_test PRIVATE
       ${Insight_SOURCE_DIR}/internal/ins
@@ -40,13 +45,23 @@ if(BUILD_TESTING)
       ins
       ${CMOCKA_LIBRARIES})
 
+    # The output directory for this test.
+    # We don't wanrt this test to be in the generic bin folder.
+    set(OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${DIR})
+    set_target_properties(${NAME}_test
+      PROPERTIES
+      RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY}
+    )
+
     add_test(NAME ${NAME}_test
-      COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${NAME}_test
+      COMMAND ${OUTPUT_DIRECTORY}/${NAME}_test
       --test_srcdir
       ${Insight_SOURCE_DIR}/data)
   endmacro()
 
   # tests
-  ins_test(errno)
-  ins_test(matrix_int)
+  ins_test(. errno)
+  ins_test(block block_double)
+  ins_test(block block_float)
+  ins_test(block block_int)
 endif()

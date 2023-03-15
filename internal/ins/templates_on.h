@@ -10,6 +10,12 @@
 #define INS_NUMERIC_OUT_FORMAT "%g"
 #define INS_NUMERIC_ZERO 0.0F
 #define INS_NUMERIC_ONE 1.0F
+#elif defined(INS_USE_NUMERIC_TYPE_INT)
+#define INS_NUMERIC_TYPE int
+#define INS_NUMERIC_INPUT_FORMAT "%d"
+#define INS_NUMERIC_OUT_FORMAT "%d"
+#define INS_NUMERIC_ZERO 0
+#define INS_NUMERIC_ONE 1
 #else
 #error Unkown INS_USE_NUMERIC_TYPE_ DIRECTIVE
 #endif

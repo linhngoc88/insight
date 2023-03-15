@@ -1,8 +1,6 @@
 # List all internal source files. Do NOT use file(GLOB *) to find source!
 set(INSIGHT_SRCS
   errno.c
-  malloc_wrappers.c
-  matrix_init.c
   block/init.c)
 
 # Depend on the private header files so that they appear in IDEs.
@@ -63,7 +61,7 @@ if(BUILD_TESTING)
 
   # tests
   ins_test(. errno)
-  ins_test(. matrix_int)
   ins_test(block block_double)
   ins_test(block block_float)
+  ins_test(block block_int)
 endif()

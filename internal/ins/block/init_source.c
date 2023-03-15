@@ -81,6 +81,46 @@ int INS_BLOCK_FUNC(fwrite)(const INS_BLOCK_TYPE * block, FILE * stream) {
   return 0;
 }
 
+int INS_BLOCK_FUNC(fprintf)(const INS_BLOCK_TYPE * block, FILE * stream,
+                            const char * format) {
+  const size_t size = block->size;
+  const INS_NUMERIC_TYPE * data = block->data;
+
+  size_t i;
+
+  for (i = 0; i < size; ++i) {
+    // Writes the next element of the block to the stream. If fprintf fails,
+    // call the error handler and return the status code `INS_EFAILED`.
+    if (fprintf(stream, format, data[i]) < 0) {
+      INS_ERROR("fprintf failed", INS_EFAILED);
+    }
+
+    // Writes the next newline character to the stream. If putc fails, call
+    // the error handler and return the status code `INS_EFAILED`.
+    if (putc('\n', stream) == EOF) {
+      INS_ERROR("putc failed", INS_EFAILED);
+    }
+  }
+
+  return INS_SUCCESS;
+}
+
+int INS_BLOCK_FUNC(fscanf)(INS_BLOCK_TYPE * block, FILE * stream) {
+  const size_t size = block->size;
+
+  size_t i;
+  INS_NUMERIC_TYPE tmp;
+
+  for (i = 0; i < size; ++i) {
+    if (fscanf(stream, INS_NUMERIC_INPUT_FORMAT, &tmp) != 1) {
+      INS_ERROR("fscanf failed", INS_EFAILED);
+    }
+    block->data[i] = tmp;
+  }
+
+  return INS_SUCCESS;
+}
+
 static INS_BLOCK_TYPE * allocate_empty_block() {
   // Allocate memory for block struct.
   INS_BLOCK_TYPE * block;

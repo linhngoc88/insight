@@ -5,11 +5,11 @@
 
 // Allocates space for a block and return a pointer to the (empty) block struct.
 // If allocation failed, call the error handler, and return 0 as the result.
-static INS_BLOCK_TYPE * allocate_empty_block();
+static INS_BLOCK_TYPE * INS_BLOCK_FUNC(allocate_empty)();
 
 INS_BLOCK_TYPE * INS_BLOCK_FUNC(alloc)(const size_t count) {
   // Allocate memory for block struct.
-  INS_BLOCK_TYPE * block = allocate_empty_block();
+  INS_BLOCK_TYPE * block = INS_BLOCK_FUNC(allocate_empty)();
   if (block == 0) { return 0; }
 
   // Allocate memory for the block elements.
@@ -28,7 +28,7 @@ INS_BLOCK_TYPE * INS_BLOCK_FUNC(alloc)(const size_t count) {
 
 INS_BLOCK_TYPE * INS_BLOCK_FUNC(calloc)(const size_t count) {
   // Allocate memory for block struct.
-  INS_BLOCK_TYPE * block = allocate_empty_block();
+  INS_BLOCK_TYPE * block = INS_BLOCK_FUNC(allocate_empty)();
   if (block == 0) { return 0; }
 
   // Allocate memory for the block elements and initialize elements to 0
@@ -121,7 +121,7 @@ int INS_BLOCK_FUNC(fscanf)(INS_BLOCK_TYPE * block, FILE * stream) {
   return INS_SUCCESS;
 }
 
-static INS_BLOCK_TYPE * allocate_empty_block() {
+static INS_BLOCK_TYPE * INS_BLOCK_FUNC(allocate_empty)() {
   // Allocate memory for block struct.
   INS_BLOCK_TYPE * block;
   block = (INS_BLOCK_TYPE *) malloc(sizeof(INS_BLOCK_TYPE));

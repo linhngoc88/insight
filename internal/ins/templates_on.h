@@ -4,6 +4,12 @@
 #define INS_NUMERIC_OUT_FORMAT "%g"
 #define INS_NUMERIC_ZERO 0.0
 #define INS_NUMERIC_ONE 1.0
+#elif defined(INS_USE_NUMERIC_TYPE_FLOAT)
+#define INS_NUMERIC_TYPE float
+#define INS_NUMERIC_INPUT_FORMAT "%g"
+#define INS_NUMERIC_OUT_FORMAT "%g"
+#define INS_NUMERIC_ZERO 0.0F
+#define INS_NUMERIC_ONE 1.0F
 #else
 #error Unkown INS_USE_NUMERIC_TYPE_ DIRECTIVE
 #endif

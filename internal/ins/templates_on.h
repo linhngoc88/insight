@@ -32,3 +32,13 @@
 #define INS_FUNC(dir,name) CONCAT3(dir,INS_NUMERIC_TYPE,name)
 #define INS_TYPE(dir) CONCAT2(dir,INS_NUMERIC_TYPE)
 #endif
+
+//
+// Convinient macros (should live at the bottom!)
+//
+
+#define INS_BLOCK_TYPE INS_TYPE(ins_block)
+#define INS_BLOCK_FUNC(name) INS_FUNC(ins_block, name)
+
+#define INS_VECTOR_TYPE INS_TYPE(ins_vector)
+#define INS_VECTOR_FUNC(name) INS_FUNC(ins_vector, name)

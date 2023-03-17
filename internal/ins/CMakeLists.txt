@@ -1,17 +1,20 @@
 # List all internal source files. Do NOT use file(GLOB *) to find source!
 set(INSIGHT_SRCS
   errno.c
-  block/init.c)
+  block/init.c
+  vector/init.c)
 
 # Depend on the private header files so that they appear in IDEs.
 file(GLOB INSIGHT_INTERNAL_HDRS
   *.h
-  block/*.h)
+  block/*.h
+  vector/*.h)
 
 # Alos depend on the private header files so that they appear in IDEs.
 file(GLOB INSIGHT_PUBLIC_HDRS
   ${Insight_SOURCE_DIR}/include/ins/*.h
-  ${Insight_SOURCE_DIR}/include/ins/block/*.h)
+  ${Insight_SOURCE_DIR}/include/ins/block/*.h
+  ${Insight_SOURCE_DIR}/include/ins/vector/*.h)
 
 set(INSIGHT_LIBRARY_SOURCE
   ${INSIGHT_SRCS}
@@ -64,4 +67,5 @@ if(BUILD_TESTING)
   ins_test(block block_double)
   ins_test(block block_float)
   ins_test(block block_int)
+  ins_test(vector vector_double)
 endif()

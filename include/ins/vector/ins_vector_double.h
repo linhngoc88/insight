@@ -86,4 +86,18 @@ ins_vector_alloc_from_vector(ins_vector * v,
 // the the memory is still owned by that object and will not be deallocated.
 void ins_vector_free(ins_vector * v);
 
+/* Initializing vector elements */
+
+// Set all elements of the vector `v` to zero.
+void ins_vector_set_zero(ins_vector * v);
+
+// Set all elements of the vector `v` to the value `x`.
+void ins_vector_set_all(ins_vector * v, double x);
+
+// Set all elements of the vector `v` to zero except for the i-th element
+// which is set to one. No bounds checking are performed, therefore clients
+// have to make sure that the given index `i` is within bounds, i.e.,
+// `0 <= i < v->size`.
+void ins_vector_set_basis(ins_vector * v, size_t i);
+
 #endif  // INS_VECTOR_DOUBLE_H_

@@ -21,10 +21,7 @@ enable_testing()
 option(BUILD_TESTING "Enable tests." ON)
 
 if(BUILD_TESTING)
-  find_package(CMocka QUIET)
-  if (NOT CMOCKA_FOUND)
-    message(FATAL_ERROR "Cmocka (https://cmocka.org/) not found!")
-  endif()
+  find_package(CMocka REQUIRED)
 endif()
 
 add_subdirectory(internal/ins)

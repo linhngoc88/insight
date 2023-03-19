@@ -177,7 +177,7 @@ void INS_VECTOR_FUNC(set_basis)(INS_VECTOR_TYPE * v, size_t i) {
   const size_t size = v->size;
   const size_t stride = v->stride;
 
-  int j;
+  size_t j;
 
   for (j = 0; j < size; ++j) {
     data[j * stride] = INS_NUMERIC_ZERO;

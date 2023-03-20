@@ -8,6 +8,7 @@ if (POLICY CMP0074)
 endif()
 
 project(Insight C)
+
 list(APPEND CMAKE_MODULE_PATH "${Insight_SOURCE_DIR}/cmake")
 include(GNUInstallDirs)
 
@@ -16,9 +17,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${Insight_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${Insight_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${Insight_BINARY_DIR}/lib)
 
+# Set postfixes for generated libraries based on buildtype.
+set(CMAKE_RELEASE_POSTFIX "")
+set(CMAKE_DEBUG_POSTFIX "-debug")
+
 # Testing
 
 enable_testing()
+
 option(BUILD_TESTING "Enable tests." ON)
 
 if(BUILD_TESTING)

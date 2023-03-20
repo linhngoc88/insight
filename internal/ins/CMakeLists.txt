@@ -42,11 +42,11 @@ if(BUILD_TESTING)
 
     target_include_directories(${NAME}_test PRIVATE
       ${Insight_SOURCE_DIR}/internal/ins
-      ${CMOCKA_INCLUDE_DIR})
+      ${CMocka_INCLUDE_DIRS})
 
     target_link_libraries(${NAME}_test PRIVATE
       insight
-      ${CMOCKA_LIBRARIES})
+      ${CMocka_LIBRARIES})
 
     # The output directory for this test.
     # We don't wanrt this test to be in the generic bin folder.

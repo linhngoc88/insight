@@ -1,49 +1,32 @@
-# - Try to find CMocka
-# Once done this will define
+# FindCMocka.cmake - Find the cmocka library (https://cmocka.org/).
 #
-#  CMOCKA_ROOT_DIR - Set this variable to the root installation of CMocka
+# This module defines the following variables:
 #
-# Read-Only variables:
-#  CMOCKA_FOUND - system has CMocka
-#  CMOCKA_INCLUDE_DIR - the CMocka include directory
-#  CMOCKA_LIBRARIES - Link these to use CMocka
-#  CMOCKA_DEFINITIONS - Compiler switches required for using CMocka
+# CMocka_FOUND:        TRUE iff cmocka library has been found.
+# CMocka_INCLUDE_DIRS: Include directories for cmocka.
+# CMocka_LIBRARIES:    Libraries required to link cmocka.
 #
-#=============================================================================
-#  Copyright (c) 2011-2012 Andreas Schneider <asn@cryptomilk.org>
+# The following variables are also defined by this module, but in line with
+# CMake recommended FindPackage() module style should NOT be referenced
+# directly by callers (use the plural variables detailed above instead).
 #
-#  Distributed under the OSI-approved BSD License (the "License");
-#  see accompanying file Copyright.txt for details.
-#
-#  This software is distributed WITHOUT ANY WARRANTY; without even the
-#  implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-#  See the License for more information.
-#=============================================================================
-#
+# CMocka_INCLUDE_DIR: Include directory for cmocka, not including the
+#                     include directory of any dependencies.
+# CMocka_LIBRARY:     cmocka library, not including the libraries of
+#                     any dependencies.
 
-find_path(CMOCKA_INCLUDE_DIR
-    NAMES
-        cmocka.h
-    PATHS
-        ${CMOCKA_ROOT_DIR}/include
-)
+unset(CMocka_FOUND)
 
-find_library(CMOCKA_LIBRARY
-    NAMES
-        cmocka
-    PATHS
-        ${CMOCKA_ROOT_DIR}/include
-)
-
-if (CMOCKA_LIBRARY)
-  set(CMOCKA_LIBRARIES
-      ${CMOCKA_LIBRARIES}
-      ${CMOCKA_LIBRARY}
-  )
-endif (CMOCKA_LIBRARY)
+find_path(CMocka_INCLUDE_DIR NAMES cmocka.h)
+find_library(CMocka_LIBRARY NAMES cmocka)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(CMocka DEFAULT_MSG CMOCKA_LIBRARIES CMOCKA_INCLUDE_DIR)
+find_package_handle_standard_args(CMocka
+  FOUND_VAR CMocka_FOUND
+  REQUIRED_VARS CMocka_LIBRARY CMocka_INCLUDE_DIR)
 
-# show the CMOCKA_INCLUDE_DIR and CMOCKA_LIBRARIES variables only in the advanced view
-mark_as_advanced(CMOCKA_INCLUDE_DIR CMOCKA_LIBRARIES)
+if (CMocka_FOUND)
+  set(CMocka_INCLUDE_DIRS ${CMocka_INCLUDE_DIR})
+  set(CMocka_LIBRARIES ${CMocka_LIBRARY})
+  mark_as_advanced(FORCE CMocka_INCLUDE_DIR CMocka_LIBRARY)
+endif()

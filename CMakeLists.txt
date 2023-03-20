@@ -17,7 +17,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${Insight_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${Insight_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${Insight_BINARY_DIR}/lib)
 
-# Set postfixes for generated libraries based on buildtype.
+# Set postfixes for generated libraries based on buildtype. For example,
+# the generated library will be named as `libinsight-debug.a` if `CMAKE_BUILD_TYPE`
+# is set to `Debug`, and it will be `libinsight.a` if `CMAKE_BUILD_TYPE` is set
+# to `Release`.
 set(CMAKE_RELEASE_POSTFIX "")
 set(CMAKE_DEBUG_POSTFIX "-debug")
 

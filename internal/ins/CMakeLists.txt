@@ -21,14 +21,14 @@ set(INSIGHT_LIBRARY_SOURCE
   ${INSIGHT_INTERNAL_HDRS}
   ${INSIGHT_PUBLIC_HDRS})
 
-add_library(ins ${INSIGHT_LIBRARY_SOURCE})
+add_library(insight ${INSIGHT_LIBRARY_SOURCE})
 
-target_include_directories(ins
+target_include_directories(insight
   PRIVATE ${Insight_SOURCE_DIR}/internal
   PUBLIC $<BUILD_INTERFACE:${Insight_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-install(TARGETS ins
+install(TARGETS insight
   EXPORT  InsightExport
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -45,7 +45,7 @@ if(BUILD_TESTING)
       ${CMOCKA_INCLUDE_DIR})
 
     target_link_libraries(${NAME}_test PRIVATE
-      ins
+      insight
       ${CMOCKA_LIBRARIES})
 
     # The output directory for this test.

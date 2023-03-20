@@ -1,3 +1,19 @@
+#ifdef INS_BLOCK_TYPE
+#undef INS_BLOCK_TYPE
+#endif
+
+#ifdef INS_BLOCK_FUNC
+#undef INS_BLOCK_FUNC
+#endif
+
+#ifdef INS_VECTOR_TYPE
+#undef INS_VECTOR_TYPE
+#endif
+
+#ifdef INS_VECTOR_FUNC
+#undef INS_VECTOR_FUNC
+#endif
+
 #ifdef INS_TYPE
 #undef INS_TYPE
 #endif

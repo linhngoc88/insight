@@ -1,8 +1,5 @@
 // Template for ins_block_[qualifier] types.
 
-#define INS_BLOCK_TYPE INS_TYPE(ins_block)
-#define INS_BLOCK_FUNC(name) INS_FUNC(ins_block, name)
-
 // Allocates space for a block and return a pointer to the (empty) block struct.
 // If allocation failed, call the error handler, and return 0 as the result.
 static INS_BLOCK_TYPE * INS_BLOCK_FUNC(allocate_empty)();
@@ -133,6 +130,3 @@ static INS_BLOCK_TYPE * INS_BLOCK_FUNC(allocate_empty)() {
 
   return block;
 }
-
-#undef INS_BLOCK_TYPE
-#undef INS_BLOCK_FUNC

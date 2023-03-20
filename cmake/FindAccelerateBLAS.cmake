@@ -11,8 +11,9 @@
 # CMake recommended FindPackage() module style should NOT be referenced
 # directly by callers (use the plural variables detailed above instead).
 #
-# AccelerateBLAS_INCLUDE_DIR: Include directory for cmocka, not including
-#                             the include directory of any dependencies.
+# AccelerateBLAS_INCLUDE_DIR: Include directory for Accelerate framework,
+#                             not including the include directory of any
+#                             dependencies.
 # AccelerateBLAS_LIBRARY: Accelerate framework, not including the libraries
 #                         of any dependencies.
 

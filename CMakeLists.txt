@@ -34,6 +34,25 @@ if(BUILD_TESTING)
   find_package(CMocka REQUIRED)
 endif()
 
+# Change the default build type from Debug to Release, while still
+# supporting overriding the build type.
+#
+# The CACHE STRING logic here and elsewhere is needed to force CMake
+# to pay attention to the value of these variables.
+if (NOT CMAKE_BUILD_TYPE)
+  message(STATUS "No build type specified; defaulting to CMAKE_BUILD_TYPE=Release.")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING
+    "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+    FORCE)
+else()
+  if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message("\n=================================================================================")
+    message("\n-- Build type: Debug. Performance might be affected!")
+    message("-- Add -DCMAKE_BUILD_TYPE=Release to the CMake command line to get an optimized build.")
+    message("\n=================================================================================")
+  endif()
+endif()
+
 add_subdirectory(internal/ins)
 
 # Install Insight public headers.

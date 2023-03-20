@@ -9,6 +9,7 @@ endif()
 
 project(Insight C)
 list(APPEND CMAKE_MODULE_PATH "${Insight_SOURCE_DIR}/cmake")
+include(GNUInstallDirs)
 
 # Insight output directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${Insight_BINARY_DIR}/bin)
@@ -29,6 +30,18 @@ endif()
 
 add_subdirectory(internal/ins)
 
-include(InsightInstallPublicHeaders)
-insight_install_public_headers(ins)
-insight_install_public_headers(ins/block)
+# Install Insight public headers.
+
+file(GLOB INSIGHT_PUBLIC_ROOT_HDRS ${Insight_SOURCE_DIR}/include/ins/*.h)
+install(FILES ${INSIGHT_PUBLIC_ROOT_HDRS}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ins)
+
+file(GLOB INSIGHT_PUBLIC_BLOCK_HDRS
+  ${Insight_SOURCE_DIR}/include/ins/block/*.h)
+install(FILES ${INSIGHT_PUBLIC_BLOCK_HDRS}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ins/block)
+
+file(GLOB INSIGHT_PUBLIC_VECTOR_HDRS
+  ${Insight_SOURCE_DIR}/include/ins/block/*.h)
+install(FILES ${INSIGHT_PUBLIC_VECTOR_HDRS}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ins/vector)

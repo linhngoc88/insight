@@ -1,0 +1,10 @@
+#ifndef INS_INTERNAL_CONFIG_H_
+#define INS_INTERNAL_CONFIG_H_
+
+// If defined, Insight was compiled with OpenBLAS.
+@INSIGHT_USE_OPEN_BLAS@
+
+// If defined, Insight was compiled with Accelerate BLAS.
+@INSIGHT_USE_ACCELERATE_BLAS@
+
+#endif // INS_INTERNAL_CONFIG_H_

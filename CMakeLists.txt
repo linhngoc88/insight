@@ -24,15 +24,17 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${Insight_BINARY_DIR}/lib)
 set(CMAKE_RELEASE_POSTFIX "")
 set(CMAKE_DEBUG_POSTFIX "-debug")
 
-# Testing
-
 enable_testing()
 
 option(BUILD_TESTING "Enable tests." ON)
 
+unset(INSIGHT_COMPILE_OPTIONS)
+
 if(BUILD_TESTING)
   find_package(CMocka REQUIRED)
 endif()
+
+# BLAS (TODO)
 
 # Change the default build type from Debug to Release, while still
 # supporting overriding the build type.
@@ -53,9 +55,24 @@ else()
   endif()
 endif()
 
+# Examples
+list(APPEND INSIGHT_COMPILE_OPTIONS INSIGHT_USE_OPEN_BLAS)
+list(APPEND INSIGHT_COMPILE_OPTIONS INSIGHT_USE_ACCELERATE_BLAS)
+
+# Configure the config.h compile options header using the current compile
+# options and put the configured header into the Insight build directory.
+# Note that the ins/internal subdir in <build>/config where the configured
+# config.h is placed is important, because Insight will be built against
+# this configured header, it needs to have the same relative include path
+# as it would if it were in the source tree (or installed).
+list(REMOVE_DUPLICATES INSIGHT_COMPILE_OPTIONS)
+include(CreateInsightConfig)
+create_insight_config("${INSIGHT_COMPILE_OPTIONS}"
+  ${Insight_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}/ins/internal)
+
 add_subdirectory(internal/ins)
 
-# Install Insight public headers.
+# Setup installation of Insight public headers.
 
 file(GLOB INSIGHT_PUBLIC_ROOT_HDRS ${Insight_SOURCE_DIR}/include/ins/*.h)
 install(FILES ${INSIGHT_PUBLIC_ROOT_HDRS}
@@ -70,3 +87,8 @@ file(GLOB INSIGHT_PUBLIC_VECTOR_HDRS
   ${Insight_SOURCE_DIR}/include/ins/block/*.h)
 install(FILES ${INSIGHT_PUBLIC_VECTOR_HDRS}
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ins/vector)
+
+# Also setup installation of Insight config.h configured with the current
+# build options into the installed headers directory.
+install(DIRECTORY ${Insight_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

@@ -19,6 +19,9 @@ function(insight_list_blas_vendors OUTPUT_VAR)
   find_package(OpenBLAS QUIET)
   if (NOT OpenBLAS_FOUND)
     list(REMOVE_ITEM AVAILABLE_BLAS_VENDORS "OpenBLAS")
+  else()
+    set(OpenBLAS_INCLUDE_DIRS ${OpenBLAS_INCLUDE_DIRS} PARENT_SCOPE)
+    set(OpenBLAS_LIBRARIES ${OpenBLAS_LIBRARIES} PARENT_SCOPE)
   endif()
 
   # AccelerateBLAS
@@ -26,6 +29,11 @@ function(insight_list_blas_vendors OUTPUT_VAR)
     find_package(AccelerateBLAS QUIET)
     if (NOT AccelerateBLAS_FOUND)
       list(REMOVE_ITEM AVAILABLE_BLAS_VENDORS "AccelerateBLAS")
+    else()
+      set(AccelerateBLAS_INCLUDE_DIRS ${AccelerateBLAS_INCLUDE_DIRS}
+        PARENT_SCOPE)
+      set(AccelerateBLAS_LIBRARIES ${AccelerateBLAS_LIBRARIES}
+        PARENT_SCOPE)
     endif()
   endif()
 

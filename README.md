@@ -1,2 +1,3 @@
 # Insight
-> The purpose of computation is insight, not numbers. Hamming, 1962.
+
+> The purpose of computation is **insight**, not numbers. Hamming, 1962.

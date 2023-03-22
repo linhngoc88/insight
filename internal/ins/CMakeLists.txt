@@ -4,31 +4,34 @@ set(INSIGHT_SRCS
   block/init.c
   vector/init.c)
 
-# Depend on the private header files so that they appear in IDEs.
+# Depend on private header files so that they appear in IDEs.
 file(GLOB INSIGHT_INTERNAL_HDRS
   *.h
   block/*.h
   vector/*.h)
 
-# Alos depend on the private header files so that they appear in IDEs.
+# Also depend on public header files so that they appear in IDEs.
 file(GLOB INSIGHT_PUBLIC_HDRS
   ${Insight_SOURCE_DIR}/include/ins/*.h
   ${Insight_SOURCE_DIR}/include/ins/block/*.h
-  ${Insight_SOURCE_DIR}/include/ins/vector/*.h)
+  ${Insight_SOURCE_DIR}/include/ins/vector/*.h
+  ${Insight_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}/ins/internal/*.h)
 
 set(INSIGHT_LIBRARY_SOURCE
   ${INSIGHT_SRCS}
   ${INSIGHT_INTERNAL_HDRS}
   ${INSIGHT_PUBLIC_HDRS})
 
-add_library(ins ${INSIGHT_LIBRARY_SOURCE})
+add_library(insight ${INSIGHT_LIBRARY_SOURCE})
 
-target_include_directories(ins
+target_include_directories(insight
+  BEFORE PUBLIC
+  $<BUILD_INTERFACE:${Insight_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE ${Insight_SOURCE_DIR}/internal
   PUBLIC $<BUILD_INTERFACE:${Insight_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-install(TARGETS ins
+install(TARGETS insight
   EXPORT  InsightExport
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -42,11 +45,11 @@ if(BUILD_TESTING)
 
     target_include_directories(${NAME}_test PRIVATE
       ${Insight_SOURCE_DIR}/internal/ins
-      ${CMOCKA_INCLUDE_DIR})
+      ${CMocka_INCLUDE_DIRS})
 
     target_link_libraries(${NAME}_test PRIVATE
-      ins
-      ${CMOCKA_LIBRARIES})
+      insight
+      ${CMocka_LIBRARIES})
 
     # The output directory for this test.
     # We don't wanrt this test to be in the generic bin folder.

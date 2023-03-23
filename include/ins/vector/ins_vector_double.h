@@ -38,7 +38,8 @@ struct ins_vector_struct {
 
 typedef struct ins_vector_struct ins_vector;
 
-/* Allocation */
+/* Allocation
+ --------------------------------------------------------------------------*/
 
 // Creates a vector of length `n` and returns a pointer to the newly created
 // vector struct. A new block is allocated for the elements of the vector, and
@@ -86,7 +87,8 @@ ins_vector_alloc_from_vector(ins_vector * v,
 // the the memory is still owned by that object and will not be deallocated.
 void ins_vector_free(ins_vector * v);
 
-/* Initializing vector elements */
+/* Initializing vector elements
+ --------------------------------------------------------------------------*/
 
 // Set all elements of the vector `v` to zero.
 void ins_vector_set_zero(ins_vector * v);
@@ -99,5 +101,47 @@ void ins_vector_set_all(ins_vector * v, double x);
 // have to make sure that the given index `i` is within bounds, i.e.,
 // `0 <= i < v->size`.
 void ins_vector_set_basis(ins_vector * v, size_t i);
+
+/* Vector operations
+ ---------------------------------------------------------------------------*/
+
+// Adds the elements of the vector `y` to the elements of the vector `x`.
+// The result `x_i <- x_i + y_i` is stored in `x` and `y` remains unchanged.
+// The two vectors must have the same length.
+int ins_vector_add(ins_vector * x, const ins_vector * y);
+
+// Subtracts the elements of the vector `y` from the elements of the vector
+// `x`. The result `x_i <- x_i - y_i` is stored in `x` and `y` remains
+// unchanged. The two vectors must have the same length.
+int ins_vector_sub(ins_vector * x, const ins_vector * y);
+
+
+// Multiplies the elements of the vector `y` by the elements of the vector
+// `x`. The result `x_i <- x_i * y_i` is stored in `x` and `y` remains
+// unchanged. The two vectors must have the same length.
+int ins_vector_mul(ins_vector * x, const ins_vector * y);
+
+// Divides the elements of the vector `x` by the elements of the vector `y`.
+// The result `x_i <- x_i / y_i` is stored in `x` and `y` remains unchanged.
+// The two vectors must have the same length.
+int ins_vector_div(ins_vector * x, const ins_vector * y);
+
+// Multiplies the elements of the vector `x` by a constant factor `alpha`.
+// The result `x_i <- alpha * x_i` is stored in `x`.
+int ins_vector_scale(ins_vector * x, double alpha);
+
+// Adds the constant value `alpha` to the elements of the vector `x`. The
+// result `x_i <- x_i + alpha` is stored in x.
+int ins_vector_add_constant(ins_vector * x, double alpha);
+
+// Returns the sum of the emements of the vector `x`.
+double ins_vector_sum(const ins_vector * x);
+
+// Performs the operation `y <- alpha * x + beta * y`. The vectors `x` and
+// `y` must have the same length.
+int ins_vector_axpby(double alpha,
+                     const ins_vector * x,
+                     double beta,
+                     ins_vector * y);
 
 #endif  // INS_VECTOR_DOUBLE_H_

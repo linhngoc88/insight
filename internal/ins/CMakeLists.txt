@@ -1,3 +1,14 @@
+# Insight PRIVATE DEPENDENCIES
+
+unset(INSIGHT_PRIVATE_DEPENDENCIES)
+unset(INSIGHT_PRIVATE_DEPENDENCIES_INCLUDE_DIRS)
+
+if (INSIGHT_BLAS_LIBRARIES AND INSIGHT_BLAS_INCLUDE_DIRS)
+  list(APPEND INSIGHT_PRIVATE_DEPENDENCIES ${INSIGHT_BLAS_LIBRARIES})
+  list(APPEND INSIGHT_PRIVATE_DEPENDENCIES_INCLUDE_DIRS
+    ${INSIGHT_BLAS_INCLUDE_DIRS})
+endif()
+
 # List all internal source files. Do NOT use file(GLOB *) to find source!
 set(INSIGHT_SRCS
   errno.c
@@ -24,12 +35,19 @@ set(INSIGHT_LIBRARY_SOURCE
 
 add_library(insight ${INSIGHT_LIBRARY_SOURCE})
 
+target_link_libraries(insight
+  PRIVATE ${INSIGHT_PRIVATE_DEPENDENCIES})
+
 target_include_directories(insight
   BEFORE PUBLIC
   $<BUILD_INTERFACE:${Insight_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE ${Insight_SOURCE_DIR}/internal
   PUBLIC $<BUILD_INTERFACE:${Insight_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
+# Add external dependencies include directories to Insight
+target_include_directories(insight PRIVATE
+  ${INSIGHT_PRIVATE_DEPENDENCIES_INCLUDE_DIRS})
 
 install(TARGETS insight
   EXPORT  InsightExport

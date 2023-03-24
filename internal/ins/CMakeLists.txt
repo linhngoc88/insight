@@ -13,7 +13,8 @@ endif()
 set(INSIGHT_SRCS
   errno.c
   block/init.c
-  vector/init.c)
+  vector/init.c
+  vector/oper.c)
 
 # Depend on private header files so that they appear in IDEs.
 file(GLOB INSIGHT_INTERNAL_HDRS

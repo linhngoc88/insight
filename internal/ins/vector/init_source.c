@@ -160,7 +160,7 @@ void INS_VECTOR_FUNC(set_zero)(INS_VECTOR_TYPE * v) {
   }
 }
 
-void INS_VECTOR_FUNC(set_all)(INS_VECTOR_TYPE * v, double x) {
+void INS_VECTOR_FUNC(set_all)(INS_VECTOR_TYPE * v, INS_NUMERIC_TYPE x) {
   INS_NUMERIC_TYPE * const data = v->data;
   const size_t size = v->size;
   const size_t stride = v->stride;

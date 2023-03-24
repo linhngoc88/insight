@@ -87,6 +87,16 @@ ins_vector_alloc_from_vector(ins_vector * v,
 // the the memory is still owned by that object and will not be deallocated.
 void ins_vector_free(ins_vector * v);
 
+// A function-like macro that returns the element of the vector at the
+// specified index.
+// TODO(linh): how about make it as an inline function instead?
+#define ins_vector_get(v, i) ((v)->data[(i) * (v)->stride])
+
+// A function-like macro that sets the element of the vector at the
+// specified index to some new value.
+// TODO(linh): how about make it as an inline function instead?
+#define ins_vector_set(v, i, x) (v)->data[(i) * (v)->stride] = (x);
+
 /* Initializing vector elements
  --------------------------------------------------------------------------*/
 

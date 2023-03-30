@@ -808,6 +808,76 @@ static void test_vector_add_constant_stride_two(void **state) {
   ins_block_free(b);
 }
 
+static void test_vector_sum_stride_one(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+  v->data[0] = 1.0;
+  v->data[1] = 3.5;
+  v->data[2] = 4.0;
+
+  const double sum = ins_vector_sum(v);
+  assert_double_equal(sum, 8.5, 0.0);
+
+  // Check v's elements
+  assert_double_equal(ins_vector_get(v, 0), 1.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 3.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 4.0, 0.0);
+
+  // Check v's data
+  assert_double_equal(v->data[0], 1.0, 0.0);
+  assert_double_equal(v->data[1], 3.5, 0.0);
+  assert_double_equal(v->data[2], 4.0, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 1);
+  assert_non_null(v->data);
+  assert_non_null(v->block);
+  assert_int_equal(v->owner, 1);
+
+  ins_vector_free(v);
+}
+
+static void test_vector_sum_stride_two(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(5);
+
+  v->data[0] = 1.0;
+  v->data[1] = 3.5;
+  v->data[2] = 4.0;
+  v->data[3] = 1.25;
+  v->data[4] = 0.75;
+
+  v->size = 3;
+  v->stride = 2;
+
+  const double sum = ins_vector_sum(v);
+  assert_double_equal(sum, 5.75, 0.0);
+
+  // Check v's elements
+  assert_double_equal(ins_vector_get(v, 0), 1.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 4.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 0.75, 0.0);
+
+  // Check v's data
+  assert_double_equal(v->data[0], 1.0, 0.0);
+  assert_double_equal(v->data[1], 3.5, 0.0);
+  assert_double_equal(v->data[2], 4.0, 0.0);
+  assert_double_equal(v->data[3], 1.25, 0.0);
+  assert_double_equal(v->data[4], 0.75, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 2);
+  assert_non_null(v->data);
+  assert_non_null(v->block);
+  assert_int_equal(v->owner, 1);
+
+  ins_vector_free(v);
+}
+
 int main(void) {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(test_scale_when_stride_is_one),
@@ -830,7 +900,9 @@ int main(void) {
     cmocka_unit_test(test_vector_div_different_strides),
     cmocka_unit_test(test_vector_div_different_lengths),
     cmocka_unit_test(test_vector_add_constant_stride_one),
-    cmocka_unit_test(test_vector_add_constant_stride_two)
+    cmocka_unit_test(test_vector_add_constant_stride_two),
+    cmocka_unit_test(test_vector_sum_stride_one),
+    cmocka_unit_test(test_vector_sum_stride_two)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);

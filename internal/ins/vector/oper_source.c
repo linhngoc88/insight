@@ -112,3 +112,18 @@ INS_VECTOR_FUNC(add_constant)(INS_VECTOR_TYPE * x, INS_NUMERIC_TYPE alpha) {
 
   return INS_SUCCESS;
 }
+
+INS_NUMERIC_TYPE
+INS_VECTOR_FUNC(sum)(const INS_VECTOR_TYPE * x) {
+  const size_t size = x->size;
+  const size_t stride = x->stride;
+
+  size_t i;
+  INS_NUMERIC_TYPE sum = INS_NUMERIC_ZERO;
+
+  for (i = 0; i < size; ++i) {
+    sum += x->data[i * stride];
+  }
+
+  return sum;
+}

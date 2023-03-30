@@ -147,11 +147,8 @@ int ins_vector_add_constant(ins_vector * x, double alpha);
 // Returns the sum of the emements of the vector `x`.
 double ins_vector_sum(const ins_vector * x);
 
-// Performs the operation `y <- alpha * x + beta * y`. The vectors `x` and
-// `y` must have the same length.
-int ins_vector_axpby(double alpha,
-                     const ins_vector * x,
-                     double beta,
-                     ins_vector * y);
+// Performs the operation `y <- alpha * x + y`. The vectors `x` and `y` must
+// have the same length.
+int ins_vector_axpy(double alpha, const ins_vector * x, ins_vector * y);
 
 #endif  // INS_VECTOR_DOUBLE_H_

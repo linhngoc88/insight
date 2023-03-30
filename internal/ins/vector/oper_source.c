@@ -127,3 +127,37 @@ INS_VECTOR_FUNC(sum)(const INS_VECTOR_TYPE * x) {
 
   return sum;
 }
+
+int
+INS_VECTOR_FUNC(axpy)(INS_NUMERIC_TYPE alpha,
+                      const INS_VECTOR_TYPE * x,
+                      INS_VECTOR_TYPE * y) {
+  const size_t size = x->size;
+
+  if (y->size != size) {
+    INS_ERROR("vectors must have same length", INS_EBADLEN);
+  }
+
+  const size_t x_stride = x->stride;
+  const size_t y_stride = y->stride;
+
+#if defined(INS_USE_NUMERIC_TYPE_DOUBLE)
+
+  cblas_daxpy(size, alpha, x->data, x_stride, y->data, y_stride);
+
+#elif defined(INS_USE_NUMERIC_TYPE_FLOAT)
+
+  cblas_saxpy(size, alpha, x->data, x_stride, y->data, y_stride);
+
+#else
+
+  size_t i ;
+
+  for (i = 0; i < size; ++i) {
+    y->data[i * y_stride] += alpha * x->data[i * x_stride];
+  }
+
+#endif
+
+  return INS_SUCCESS;
+}

@@ -739,7 +739,8 @@ static void test_vector_add_constant_stride_one(void **state) {
   assert_double_equal(ins_vector_get(v, 1), 4.0, 0.0);
   assert_double_equal(ins_vector_get(v, 2), 2.5, 0.0);
 
-  ins_vector_add_constant(v, 0.5);
+  const int ret = ins_vector_add_constant(v, 0.5);
+  assert_int_equal(ret, INS_SUCCESS);
 
   // Check v's elements after adding a constant.
   assert_double_equal(ins_vector_get(v, 0), 1.0, 0.0);
@@ -781,7 +782,8 @@ static void test_vector_add_constant_stride_two(void **state) {
   assert_double_equal(ins_vector_get(v, 1), 4.0, 0.0);
   assert_double_equal(ins_vector_get(v, 2), 9.0, 0.0);
 
-  ins_vector_add_constant(v, 0.5);
+  const int ret = ins_vector_add_constant(v, 0.5);
+  assert_int_equal(ret, INS_SUCCESS);
 
   // Check v's elements after adding a constant.
   assert_double_equal(ins_vector_get(v, 0), 1.5, 0.0);

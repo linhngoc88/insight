@@ -98,3 +98,17 @@ int INS_VECTOR_FUNC(scale)(INS_VECTOR_TYPE * x, INS_NUMERIC_TYPE alpha) {
 
   return INS_SUCCESS;
 }
+
+int
+INS_VECTOR_FUNC(add_constant)(INS_VECTOR_TYPE * x, INS_NUMERIC_TYPE alpha) {
+  const size_t size = x->size;
+  const size_t stride = x->stride;
+
+  size_t i;
+
+  for (i = 0; i < size; ++i) {
+    x->data[i * stride] += alpha;
+  }
+
+  return INS_SUCCESS;
+}

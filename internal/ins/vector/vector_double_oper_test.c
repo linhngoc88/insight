@@ -724,6 +724,88 @@ static void test_vector_div_different_lengths(void **state) {
   ins_vector_free(x);
 }
 
+static void test_vector_add_constant_stride_one(void **state) {
+  (void) state;
+
+  ins_block *b = ins_block_calloc(5);
+  b->data[1] = 0.5;
+  b->data[2] = 4.0;
+  b->data[3] = 2.5;
+
+  ins_vector *v = ins_vector_alloc_from_block(b, 1, 3, 1);
+
+  // Check v's elements before adding a constant.
+  assert_double_equal(ins_vector_get(v, 0), 0.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 4.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 2.5, 0.0);
+
+  ins_vector_add_constant(v, 0.5);
+
+  // Check v's elements after adding a constant.
+  assert_double_equal(ins_vector_get(v, 0), 1.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 4.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 3.0, 0.0);
+
+  // Check b's data
+  assert_double_equal(b->data[0], 0.0, 0.0);
+  assert_double_equal(b->data[1], 1.0, 0.0);
+  assert_double_equal(b->data[2], 4.5, 0.0);
+  assert_double_equal(b->data[3], 3.0, 0.0);
+  assert_double_equal(b->data[4], 0.0, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 1);
+  assert_ptr_equal(v->data, b->data + 1);
+  assert_ptr_equal(v->block, b);
+  assert_int_equal(v->owner, 0);
+
+  ins_vector_free(v);
+  ins_block_free(b);
+}
+
+static void test_vector_add_constant_stride_two(void **state) {
+  (void) state;
+
+  ins_block *b = ins_block_calloc(5);
+  b->data[0] = 1.0;
+  b->data[1] = 0.5;
+  b->data[2] = 4.0;
+  b->data[3] = 2.5;
+  b->data[4] = 9.0;
+
+  ins_vector *v = ins_vector_alloc_from_block(b, 0, 3, 2);
+
+  // Check v's elements before adding a constant.
+  assert_double_equal(ins_vector_get(v, 0), 1.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 4.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 9.0, 0.0);
+
+  ins_vector_add_constant(v, 0.5);
+
+  // Check v's elements after adding a constant.
+  assert_double_equal(ins_vector_get(v, 0), 1.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 4.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 9.5, 0.0);
+
+  // Check b's data
+  assert_double_equal(b->data[0], 1.5, 0.0);
+  assert_double_equal(b->data[1], 0.5, 0.0);
+  assert_double_equal(b->data[2], 4.5, 0.0);
+  assert_double_equal(b->data[3], 2.5, 0.0);
+  assert_double_equal(b->data[4], 9.5, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 2);
+  assert_ptr_equal(v->data, b->data);
+  assert_ptr_equal(v->block, b);
+  assert_int_equal(v->owner, 0);
+
+  ins_vector_free(v);
+  ins_block_free(b);
+}
+
 int main(void) {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(test_scale_when_stride_is_one),
@@ -744,7 +826,9 @@ int main(void) {
     cmocka_unit_test(test_vector_div_same_stride_one),
     cmocka_unit_test(test_vector_div_same_stride_two),
     cmocka_unit_test(test_vector_div_different_strides),
-    cmocka_unit_test(test_vector_div_different_lengths)
+    cmocka_unit_test(test_vector_div_different_lengths),
+    cmocka_unit_test(test_vector_add_constant_stride_one),
+    cmocka_unit_test(test_vector_add_constant_stride_two)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);

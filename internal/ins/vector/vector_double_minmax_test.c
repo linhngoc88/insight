@@ -196,6 +196,79 @@ static void test_vector_minmax_nan(void **state) {
   ins_vector_free(v);
 }
 
+static void test_vector_min_index_stride_one(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+
+  v->data[0] = 2.5;
+  v->data[1] = 1.0;
+  v->data[2] = -0.5;
+
+  assert_int_equal(ins_vector_min_index(v), 2);
+
+  v->data[0] = -0.5;
+  assert_int_equal(ins_vector_min_index(v), 0);
+
+  v->data[1] = -2.5;
+  assert_int_equal(ins_vector_min_index(v), 1);
+
+  v->data[2] = -3.5;
+  assert_int_equal(ins_vector_min_index(v), 2);
+
+  ins_vector_free(v);
+}
+
+static void test_vector_min_index_stride_two(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(5);
+
+  v->data[0] = 2.5;
+  v->data[1] = -1.0;
+  v->data[2] = 1.0;
+  v->data[3] = -4.0;
+  v->data[4] = -0.5;
+
+  v->size = 3;
+  v->stride = 2;
+
+  assert_int_equal(ins_vector_min_index(v), 2);
+
+  ins_vector_set(v, 0, -0.5);
+  assert_int_equal(ins_vector_min_index(v), 0);
+
+  ins_vector_set(v, 1, -2.5);
+  assert_int_equal(ins_vector_min_index(v), 1);
+
+  ins_vector_set(v, 2, -3.5);
+  assert_int_equal(ins_vector_min_index(v), 2);
+
+  ins_vector_free(v);
+}
+
+static void test_vector_min_index_nan(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+
+  v->data[0] = sqrt(-4.0);
+  v->data[1] = 1.0;
+  v->data[2] = -0.5;
+
+  assert_int_equal(ins_vector_min_index(v), 0);
+
+  v->data[0] = -0.5;
+  v->data[1] = sqrt(-4.0);
+  assert_int_equal(ins_vector_min_index(v), 1);
+
+  v->data[1] = -2.5;
+  v->data[2] = sqrt(-4.0);
+  assert_int_equal(ins_vector_min_index(v), 2);
+
+  ins_vector_free(v);
+}
+
 int main(void) {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(test_vector_min_stride_one),
@@ -206,7 +279,10 @@ int main(void) {
     cmocka_unit_test(test_vector_max_nan),
     cmocka_unit_test(test_vector_minmax_stride_one),
     cmocka_unit_test(test_vector_minmax_stride_two),
-    cmocka_unit_test(test_vector_minmax_nan)
+    cmocka_unit_test(test_vector_minmax_nan),
+    cmocka_unit_test(test_vector_min_index_stride_one),
+    cmocka_unit_test(test_vector_min_index_stride_two),
+    cmocka_unit_test(test_vector_min_index_nan)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);

@@ -1,3 +1,4 @@
+#include <math.h>
 #include "ins/ins_vector.h"
 
 #define INS_USE_NUMERIC_TYPE_DOUBLE

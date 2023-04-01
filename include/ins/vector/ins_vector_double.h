@@ -151,4 +151,31 @@ double ins_vector_sum(const ins_vector * x);
 // have the same length.
 int ins_vector_axpy(double alpha, const ins_vector * x, ins_vector * y);
 
+/* Maximum and mininum elements
+   -----------------------------------------------------------------------*/
+
+// Returns the minimum value in the vector `v`.
+double ins_vector_min(const ins_vector *v);
+
+// Returns the maximum value in the vector `v`.
+double ins_vector_max(const ins_vector *v);
+
+// Returns the minimum and the maximum values in the vector `v`, storing
+// them in `min_out` and `max_out`, respectively.
+void ins_vector_minmax(const ins_vector *v, double *min_out, double *max_out);
+
+// Returns the index of the minimum value in the vector `v`. When there
+// are several equal minimum elements then the lowest index is returned.
+size_t ins_vector_min_index(const ins_vector *v);
+
+// Returns the index of the maximum value in the vector `v`. When there
+// are several equal maximum elements then the lowest index is returned.
+size_t ins_vector_max_index(const ins_vector *v);
+
+// Returns the indices of the minimum and the maximum values in the vector
+// `v`, storing them in `imin` and `imax`, respectively. When there are
+// several equal minimum or maximum elements then the lowest indices are
+// returned.
+void ins_vector_minmax_index(const ins_vector *v, size_t *imin, size_t *imax);
+
 #endif  // INS_VECTOR_DOUBLE_H_

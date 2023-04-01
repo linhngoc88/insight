@@ -57,3 +57,7 @@
 #ifdef INS_NUMERIC_ONE
 #undef INS_NUMERIC_ONE
 #endif
+
+#ifdef INS_FLOATING_POINT
+#undef INS_FLOATING_POINT
+#endif

@@ -342,6 +342,107 @@ static void test_vector_max_index_nan(void **state) {
   ins_vector_free(v);
 }
 
+static void test_vector_minmax_index_stride_one(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+
+  v->data[0] = -2.5;
+  v->data[1] = 1.0;
+  v->data[2] = 4.5;
+
+  size_t imin, imax;
+  ins_vector_minmax_index(v, &imin, &imax);
+  assert_int_equal(imin, 0);
+  assert_int_equal(imax, 2);
+
+  v->data[0] = 1.0;
+  ins_vector_minmax_index(v, &imin, &imax);
+  assert_int_equal(imin, 0);
+  assert_int_equal(imax, 2);
+
+  v->data[1] = 4.5;
+  ins_vector_minmax_index(v, &imin, &imax);
+  assert_int_equal(imin, 0);
+  assert_int_equal(imax, 1);
+
+  v->data[0] = -7.5;
+  v->data[2] = 6.5;
+  ins_vector_minmax_index(v, &imin, &imax);
+  assert_int_equal(imin, 0);
+  assert_int_equal(imax, 2);
+
+  ins_vector_free(v);
+}
+
+static void test_vector_minmax_index_stride_two(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(5);
+
+  v->data[0] = -2.5;
+  v->data[1] = 5.0;
+  v->data[2] = 1.0;
+  v->data[3] = -7.5;
+  v->data[4] = 4.5;
+
+  v->size = 3;
+  v->stride = 2;
+
+  size_t imin, imax;
+  ins_vector_minmax_index(v, &imin, &imax);
+  assert_int_equal(imin, 0);
+  assert_int_equal(imax, 2);
+
+  ins_vector_set(v, 0, 1.0);
+  ins_vector_minmax_index(v, &imin, &imax);
+  assert_int_equal(imin, 0);
+  assert_int_equal(imax, 2);
+
+  ins_vector_set(v, 1, 4.5);
+  ins_vector_minmax_index(v, &imin, &imax);
+  assert_int_equal(imin, 0);
+  assert_int_equal(imax, 1);
+
+  ins_vector_set(v, 0, -7.5);
+  ins_vector_set(v, 2, 6.5);
+  ins_vector_minmax_index(v, &imin, &imax);
+  assert_int_equal(imin, 0);
+  assert_int_equal(imax, 2);
+
+  ins_vector_free(v);
+}
+
+static void test_vector_minmax_index_nan(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+
+  v->data[0] = sqrt(-4.0);
+  v->data[1] = 1.0;
+  v->data[2] = 2.5;
+
+  size_t imin, imax;
+
+  ins_vector_minmax_index(v, &imin, &imax);
+  assert_int_equal(imin, 0);
+  assert_int_equal(imax, 0);
+
+  v->data[0] = 5.0;
+  v->data[1] = sqrt(-2.0);
+  ins_vector_minmax_index(v, &imin, &imax);
+  assert_int_equal(imin, 1);
+  assert_int_equal(imax, 1);
+
+  v->data[1] = -2.5;
+  v->data[2] = sqrt(-9.0);
+  ins_vector_minmax_index(v, &imin, &imax);
+  assert_int_equal(imin, 2);
+  assert_int_equal(imax, 2);
+
+  ins_vector_free(v);
+}
+
 int main(void) {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(test_vector_min_stride_one),
@@ -358,7 +459,10 @@ int main(void) {
     cmocka_unit_test(test_vector_min_index_nan),
     cmocka_unit_test(test_vector_max_index_stride_one),
     cmocka_unit_test(test_vector_max_index_stride_two),
-    cmocka_unit_test(test_vector_max_index_nan)
+    cmocka_unit_test(test_vector_max_index_nan),
+    cmocka_unit_test(test_vector_minmax_index_stride_one),
+    cmocka_unit_test(test_vector_minmax_index_stride_two),
+    cmocka_unit_test(test_vector_minmax_index_nan)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);

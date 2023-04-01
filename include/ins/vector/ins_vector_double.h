@@ -173,9 +173,11 @@ size_t ins_vector_min_index(const ins_vector *v);
 size_t ins_vector_max_index(const ins_vector *v);
 
 // Returns the indices of the minimum and the maximum values in the vector
-// `v`, storing them in `imin` and `imax`, respectively. When there are
-// several equal minimum or maximum elements then the lowest indices are
-// returned.
-void ins_vector_minmax_index(const ins_vector *v, size_t *imin, size_t *imax);
+// `v`, storing them in `imin_out` and `imax_out`, respectively.
+// When there are several equal minimum or maximum elements then the lowest
+// indices are returned.
+void ins_vector_minmax_index(const ins_vector * v,
+                             size_t * imin_out,
+                             size_t * imax_out);
 
 #endif  // INS_VECTOR_DOUBLE_H_

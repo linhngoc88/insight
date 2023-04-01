@@ -57,3 +57,43 @@ INS_VECTOR_FUNC(max)(const INS_VECTOR_TYPE *v) {
 
   return max;
 }
+
+void
+INS_VECTOR_FUNC(minmax)(const INS_VECTOR_TYPE * v,
+                        INS_NUMERIC_TYPE * min_out,
+                        INS_NUMERIC_TYPE * max_out) {
+  const size_t size = v->size;
+  const size_t stride = v->stride;
+
+  INS_NUMERIC_TYPE min = v->data[0 * stride];
+  INS_NUMERIC_TYPE max = min;
+
+  INS_NUMERIC_TYPE cur;
+  size_t i;
+
+  for (i = 0; i < size; ++i) {
+    cur = v->data[i * stride];
+
+    if (cur < min) {
+      min = cur;
+    }
+
+    if (cur > max) {
+      max = cur;
+    }
+
+#ifdef INS_FLOATING_POINT
+
+    if (isnan(cur)) {
+      min = cur;
+      max = cur;
+      break;
+    }
+
+#endif
+
+  }
+
+  *min_out = min;
+  *max_out = max;
+}

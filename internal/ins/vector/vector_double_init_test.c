@@ -727,6 +727,167 @@ static void test_set_basis_three_from_block_stride_two(void **state) {
   ins_block_free(b);
 }
 
+static void test_vector_get_when_stride_is_one(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+  v->data[0] = 0.5;
+  v->data[1] = -2.5;
+  v->data[2] = 4.0;
+
+  assert_double_equal(ins_vector_get(v, 0), 0.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), -2.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 4.0, 0.0);
+
+  assert_double_equal(ins_vector_get(v, 1 - 1), 0.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 2 - 1), -2.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 1 + 1), 4.0, 0.0);
+
+  assert_double_equal(ins_vector_get(v + 1 - 1, 0), 0.5, 0.0);
+  assert_double_equal(ins_vector_get((v + 1) - 1, 1), -2.5, 0.0);
+  assert_double_equal(ins_vector_get(v + 2 - 2, 2), 4.0, 0.0);
+
+  ins_vector_free(v);
+}
+
+static void test_vector_get_when_stride_is_greater_than_one(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(7);
+
+  v->data[0] = 1.0;
+  v->data[1] = 2.0;
+  v->data[2] = 3.0;
+  v->data[3] = 4.0;
+  v->data[4] = 5.0;
+  v->data[5] = 6.0;
+  v->data[6] = 7.0;
+
+  v->stride = 2;
+
+  assert_double_equal(ins_vector_get(v, 0), 1.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 3.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 5.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 3), 7.0, 0.0);
+
+  v->stride = 3;
+
+  assert_double_equal(ins_vector_get(v, 0), 1.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 4.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 7.0, 0.0);
+
+  ins_vector_free(v);
+}
+
+static void test_vector_set_when_stride_is_one(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+
+  ins_vector_set(v, 0, 1.5);
+  ins_vector_set(v, 1, 2.4);
+  ins_vector_set(v, 2, 0.2);
+
+  assert_double_equal(v->data[0], 1.5, 0.0);
+  assert_double_equal(v->data[1], 2.4, 0.0);
+  assert_double_equal(v->data[2], 0.2, 0.0);
+
+  assert_double_equal(ins_vector_get(v, 0), 1.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 2.4, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 0.2, 0.0);
+
+  ins_vector_set(v, 1 - 1, 0.25 * 2);
+  ins_vector_set(v, 2 - 1, 1.0 - 2.5);
+  ins_vector_set(v, 1 + 1, 0.5 + 1.0);
+
+  assert_double_equal(v->data[0], 0.5, 0.0);
+  assert_double_equal(v->data[1], -1.5, 0.0);
+  assert_double_equal(v->data[2], 1.5, 0.0);
+
+  assert_double_equal(ins_vector_get(v, 0), 0.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), -1.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 1.5, 0.0);
+
+  const size_t i = 1;
+  ins_vector *w = v;
+  ins_vector_set(w, i, 12.5);
+
+  assert_double_equal(v->data[0], 0.5, 0.0);
+  assert_double_equal(v->data[1], 12.5, 0.0);
+  assert_double_equal(v->data[2], 1.5, 0.0);
+
+  assert_double_equal(ins_vector_get(v, 0), 0.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 12.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 1.5, 0.0);
+
+  assert_double_equal(w->data[0], 0.5, 0.0);
+  assert_double_equal(w->data[1], 12.5, 0.0);
+  assert_double_equal(w->data[2], 1.5, 0.0);
+
+  assert_double_equal(ins_vector_get(w, 0), 0.5, 0.0);
+  assert_double_equal(ins_vector_get(w, 1), 12.5, 0.0);
+  assert_double_equal(ins_vector_get(w, 2), 1.5, 0.0);
+
+  ins_vector_free(v);
+}
+
+static void test_vector_set_when_stride_is_greater_than_one(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(7);
+
+  // stride = 1
+  ins_vector_set(v, 0, 1.0);
+  ins_vector_set(v, 1, 2.0);
+  ins_vector_set(v, 2, 3.0);
+  ins_vector_set(v, 3, 4.0);
+  ins_vector_set(v, 4, 5.0);
+  ins_vector_set(v, 5, 6.0);
+  ins_vector_set(v, 6, 7.0);
+
+  // stride = 2, size = 4
+  v->stride = 2;
+
+  ins_vector_set(v, 0, 0.5);
+  ins_vector_set(v, 1, 1.5);
+  ins_vector_set(v, 2, 2.5);
+  ins_vector_set(v, 3, 3.5);
+
+  assert_double_equal(v->data[0], 0.5, 0.0);
+  assert_double_equal(v->data[1], 2.0, 0.0);
+  assert_double_equal(v->data[2], 1.5, 0.0);
+  assert_double_equal(v->data[3], 4.0, 0.0);
+  assert_double_equal(v->data[4], 2.5, 0.0);
+  assert_double_equal(v->data[5], 6.0, 0.0);
+  assert_double_equal(v->data[6], 3.5, 0.0);
+
+  assert_double_equal(ins_vector_get(v, 0), 0.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 1.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 2.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 3), 3.5, 0.0);
+
+  // stride = 3, size = 3
+  v->stride = 3;
+
+  ins_vector_set(v, 0, -2.4);
+  ins_vector_set(v, 1, 0.0);
+  ins_vector_set(v, 2, 1.6);
+
+  assert_double_equal(v->data[0], -2.4, 0.0);
+  assert_double_equal(v->data[1], 2.0, 0.0);
+  assert_double_equal(v->data[2], 1.5, 0.0);
+  assert_double_equal(v->data[3], 0.0, 0.0);
+  assert_double_equal(v->data[4], 2.5, 0.0);
+  assert_double_equal(v->data[5], 6.0, 0.0);
+  assert_double_equal(v->data[6], 1.6, 0.0);
+
+  assert_double_equal(ins_vector_get(v, 0), -2.4, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 0.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 1.6, 0.0);
+
+  ins_vector_free(v);
+}
+
 int main(void) {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(alloc_success),
@@ -754,7 +915,11 @@ int main(void) {
     cmocka_unit_test(test_set_basis_three_from_block_stride_one),
     cmocka_unit_test(test_set_basis_one_from_block_stride_two),
     cmocka_unit_test(test_set_basis_two_from_block_stride_two),
-    cmocka_unit_test(test_set_basis_three_from_block_stride_two)
+    cmocka_unit_test(test_set_basis_three_from_block_stride_two),
+    cmocka_unit_test(test_vector_get_when_stride_is_one),
+    cmocka_unit_test(test_vector_get_when_stride_is_greater_than_one),
+    cmocka_unit_test(test_vector_set_when_stride_is_one),
+    cmocka_unit_test(test_vector_set_when_stride_is_greater_than_one)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);

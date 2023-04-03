@@ -1,0 +1,55 @@
+int INS_VECTOR_FUNC(fread)(INS_VECTOR_TYPE *v, FILE *stream) {
+  const size_t size = v->size;
+  const size_t stride = v->stride;
+
+  const size_t elem_size = sizeof(INS_NUMERIC_TYPE);
+  size_t num_elems;
+
+  if (stride == 1) {
+    num_elems = fread(v->data, elem_size, size, stream);
+    if (num_elems != size) {
+      INS_ERROR("fread failed", INS_EFAILED);
+    }
+  } else {
+    size_t i;
+
+    // TODO(linh): Call `fread` inside a loop? What if the size of the
+    // vector is big, say, order of million elements?
+    for (i = 0; i < size; ++i) {
+      num_elems = fread(v->data + i * stride, elem_size, 1, stream);
+      if (num_elems != 1) {
+        INS_ERROR("fread failed", INS_EFAILED);
+      }
+    }
+  }
+
+  return INS_SUCCESS;
+}
+
+int INS_VECTOR_FUNC(fwrite)(const INS_VECTOR_TYPE *v, FILE *stream) {
+  const size_t size = v->size;
+  const size_t stride = v->stride;
+
+  const size_t elem_size = sizeof(INS_NUMERIC_TYPE);
+  size_t num_elems;
+
+  if (stride == 1) {
+    num_elems = fwrite(v->data, elem_size, size, stream);
+    if (num_elems != size) {
+      INS_ERROR("fwrite failed", INS_EFAILED);
+    }
+  } else {
+    size_t i;
+
+    // TODO(linh): Call `fwrite` inside a loop? What if the size of the
+    // vector is big, say, order of million elements?
+    for (i = 0; i < size; ++i) {
+      num_elems = fwrite(v->data + i * stride, elem_size, 1, stream);
+      if (num_elems != 1) {
+        INS_ERROR("fwrite failed", INS_EFAILED);
+      }
+    }
+  }
+
+  return INS_SUCCESS;
+}

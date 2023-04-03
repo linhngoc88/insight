@@ -15,7 +15,8 @@ set(INSIGHT_SRCS
   block/init.c
   vector/init.c
   vector/oper.c
-  vector/minmax.c)
+  vector/minmax.c
+  vector/file.c)
 
 # Depend on private header files so that they appear in IDEs.
 file(GLOB INSIGHT_INTERNAL_HDRS
@@ -93,4 +94,5 @@ if(BUILD_TESTING)
   ins_test(vector vector_double_init)
   ins_test(vector vector_double_oper)
   ins_test(vector vector_double_minmax)
+  ins_test(vector vector_double_file)
 endif()

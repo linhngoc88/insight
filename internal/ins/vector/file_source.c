@@ -53,3 +53,25 @@ int INS_VECTOR_FUNC(fwrite)(const INS_VECTOR_TYPE *v, FILE *stream) {
 
   return INS_SUCCESS;
 }
+
+int INS_VECTOR_FUNC(fprintf)(const INS_VECTOR_TYPE *v,
+                             FILE *stream,
+                             const char *format) {
+  const size_t size = v->size;
+  const size_t stride = v->stride;
+  const INS_NUMERIC_TYPE *data = v->data;
+
+  size_t i;
+
+  for (i = 0; i < size; ++i) {
+    if (fprintf(stream, format, data[i * stride]) < 0) {
+      INS_ERROR("fprintf failed", INS_EFAILED);
+    }
+
+    if (putc('\n', stream) == EOF) {
+      INS_ERROR("putc failed", INS_EFAILED);
+    }
+  }
+
+  return INS_SUCCESS;
+}

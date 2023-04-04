@@ -112,12 +112,128 @@ static void test_vector_fread_stride_two(void **state) {
   ins_vector_free(v);
 }
 
+static void test_ins_vector_fprintf_stride_one(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+  v->data[0] = 0.125;
+  v->data[1] = 4.0;
+  v->data[2] = -2.45;
+
+  FILE *file = fopen("vector_double_fprintf_stride_one.dat", "wb");
+  assert_non_null(file);
+
+  const int status = ins_vector_fprintf(v, file, "%g");
+  assert_int_equal(status, INS_SUCCESS);
+
+  fclose(file);
+  ins_vector_free(v);
+}
+
+static void test_ins_vector_fprintf_stride_two(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(5);
+
+  v->data[0] = 0.125;
+  v->data[1] = -1.5;
+  v->data[2] = 4.0;
+  v->data[3] = 2.5;
+  v->data[4] = -2.45;
+
+  v->size = 3;
+  v->stride = 2;
+
+  FILE *file = fopen("vector_double_fprintf_stride_two.dat", "wb");
+  assert_non_null(file);
+
+  const int status = ins_vector_fprintf(v, file, "%g");
+  assert_int_equal(status, INS_SUCCESS);
+
+  fclose(file);
+  ins_vector_free(v);
+}
+
+static void test_ins_vector_fscanf_stride_one(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+
+  FILE *file = fopen("vector_double_fprintf_stride_one.dat", "rb");
+  assert_non_null(file);
+
+  const int status = ins_vector_fscanf(v, file);
+  assert_int_equal(status, INS_SUCCESS);
+
+  // Check v's data
+  assert_double_equal(v->data[0], 0.125, 0.0);
+  assert_double_equal(v->data[1], 4.0, 0.0);
+  assert_double_equal(v->data[2], -2.45, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 1);
+  assert_non_null(v->block);
+  assert_ptr_equal(v->block->data, v->data);
+  assert_int_equal(v->owner, 1);
+
+  fclose(file);
+  ins_vector_free(v);
+}
+
+static void test_ins_vector_fscanf_stride_two(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(5);
+
+  v->data[0] = 0.0;
+  v->data[1] = -1.5;
+  v->data[2] = 0.0;
+  v->data[3] = 2.5;
+  v->data[4] = 0.0;
+
+  v->size = 3;
+  v->stride = 2;
+
+  FILE *file = fopen("vector_double_fprintf_stride_two.dat", "rb");
+  assert_non_null(file);
+
+  const int status = ins_vector_fscanf(v, file);
+  assert_int_equal(status, INS_SUCCESS);
+
+  // Check v's elements
+  assert_double_equal(ins_vector_get(v, 0), 0.125, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 4.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), -2.45, 0.0);
+
+  // Check v's data
+  assert_double_equal(v->data[0], 0.125, 0.0);
+  assert_double_equal(v->data[1], -1.5, 0.0);
+  assert_double_equal(v->data[2], 4.0, 0.0);
+  assert_double_equal(v->data[3], 2.5, 0.0);
+  assert_double_equal(v->data[4], -2.45, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 2);
+  assert_non_null(v->block);
+  assert_ptr_equal(v->block->data, v->data);
+  assert_int_equal(v->owner, 1);
+
+  fclose(file);
+  ins_vector_free(v);
+}
+
 int main(void) {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(test_vector_fwrite_stride_one),
     cmocka_unit_test(test_vector_fwrite_stride_two),
     cmocka_unit_test(test_vector_fread_stride_one),
-    cmocka_unit_test(test_vector_fread_stride_two)
+    cmocka_unit_test(test_vector_fread_stride_two),
+    cmocka_unit_test(test_ins_vector_fprintf_stride_one),
+    cmocka_unit_test(test_ins_vector_fprintf_stride_two),
+    cmocka_unit_test(test_ins_vector_fscanf_stride_one),
+    cmocka_unit_test(test_ins_vector_fscanf_stride_two)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);

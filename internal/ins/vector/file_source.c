@@ -75,3 +75,21 @@ int INS_VECTOR_FUNC(fprintf)(const INS_VECTOR_TYPE *v,
 
   return INS_SUCCESS;
 }
+
+int INS_VECTOR_FUNC(fscanf)(INS_VECTOR_TYPE *v, FILE *stream) {
+  const size_t size = v->size;
+  const size_t stride = v->stride;
+  INS_NUMERIC_TYPE * const data = v->data;
+
+  size_t i;
+  INS_NUMERIC_TYPE tmp;
+
+  for (i = 0; i < size; ++i) {
+    if (fscanf(stream, INS_NUMERIC_INPUT_FORMAT, &tmp) != 1) {
+      INS_ERROR("fscanf failed", INS_EFAILED);
+    }
+    data[i * stride] = tmp;
+  }
+
+  return INS_SUCCESS;
+}

@@ -180,4 +180,33 @@ void ins_vector_minmax_index(const ins_vector * v,
                              size_t * imin_out,
                              size_t * imax_out);
 
+/* Reading and writing vectors
+   -----------------------------------------------------------------------*/
+
+// Reads into the vector `v` from the open stream `stream` in binary format.
+// The vector `v` must be preallocated with the correct length since the
+// function uses the size of `v` to determine how many bytes to read.
+// The return value is `INS_SUCCESS` for success and `INS_EFAILED` if there
+// was a problem reading from the file.
+int ins_vector_fread(ins_vector *v, FILE *stream);
+
+// Writes the elements of the vector `v` to the stream `stream` in binary
+// format. The return value is `INS_SUCCESS` for success and `INS_EFAILED`
+// if there was a problem writing to the file.
+int ins_vector_fwrite(const ins_vector *v, FILE *stream);
+
+// Writes the elements of the vector `v` line-by-line to the open stream
+// `stream` using the format specifier `format`, which should be one of
+// `%g`, `%e`, or `%f` formats for floating point numbers and `%d` for
+// integers. The function returns `INS_SUCCESS` for success and `INS_EFAILED`
+// if there was a problem writing to the file.
+int ins_vector_fprintf(const ins_vector *v, FILE *stream, const char *format);
+
+// Reads formatted data from the stream `stream` into the vector `v`. The
+// vector `v` must be preallocated with the correct length since the function
+// uses the size of `v` to determine how many bytes to read. The function
+// returns `INS_SUCCESS` for success and `INS_EFAILED` if there was a problem
+// reading from the file.
+int ins_vector_fscanf(ins_vector *v, FILE *stream);
+
 #endif  // INS_VECTOR_DOUBLE_H_

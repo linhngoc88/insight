@@ -161,3 +161,40 @@ INS_VECTOR_FUNC(axpy)(INS_NUMERIC_TYPE alpha,
 
   return INS_SUCCESS;
 }
+
+int INS_VECTOR_FUNC(swap)(INS_VECTOR_TYPE * v, INS_VECTOR_TYPE * w) {
+  const size_t size = v->size;
+
+  if (w->size != size) {
+    INS_ERROR("vectors must have same length", INS_EINVAL);
+  }
+
+  const size_t v_stride = v->stride;
+  const size_t w_stride = w->stride;
+
+  INS_NUMERIC_TYPE * const v_data = v->data;
+  INS_NUMERIC_TYPE * const w_data = w->data;
+
+#if defined(INS_USE_NUMERIC_TYPE_DOUBLE)
+
+  cblas_dswap(size, v_data, v_stride, w_data, w_stride);
+
+#elif defined(INS_USE_NUMERIC_TYPE_FLOAT)
+
+  cblas_sswap(size, v_data, v_stride, w_data, w_stride);
+
+#else
+
+  size_t i;
+  INS_NUMERIC_TYPE tmp;
+
+  for (i = 0; i < size; ++i) {
+    tmp = v_data[i * v_stride];
+    v_data[i * v_stride] = w_data[i * w_stride];
+    w_data[i * w_stride] = tmp;
+  }
+
+#endif
+
+  return INS_SUCCESS;
+}

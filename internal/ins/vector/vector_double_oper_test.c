@@ -1720,6 +1720,76 @@ static void test_vector_dot_diff_lengths(void **state) {
   ins_vector_free(v);
 }
 
+static void test_vector_nrm2_stride_one(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+  double * const v_data = v->data;
+  ins_block * const v_block = v->block;
+
+  v->data[0] = 3.0;
+  v->data[1] = 0.0;
+  v->data[2] = 4.0;
+
+  assert_double_equal(ins_vector_nrm2(v), 5.0, 0.0);
+
+  // Check v's data
+  assert_double_equal(v->data[0], 3.0, 0.0);
+  assert_double_equal(v->data[1], 0.0, 0.0);
+  assert_double_equal(v->data[2], 4.0, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 1);
+  assert_non_null(v->block);
+  assert_ptr_equal(v->block->data, v->data);
+  assert_int_equal(v->block->size, 3);
+  assert_int_equal(v->owner, 1);
+  assert_ptr_equal(v->data, v_data);
+  assert_ptr_equal(v->block, v_block);
+
+  ins_vector_free(v);
+}
+
+static void test_vector_nrm2_stride_two(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(5);
+
+  double * const v_data = v->data;
+  ins_block * const v_block = v->block;
+
+  v->size = 3;
+  v->stride = 2;
+
+  v->data[0] = 3.0;
+  v->data[1] = 0.5;
+  v->data[2] = 0.0;
+  v->data[3] = 1.2;
+  v->data[4] = 4.0;
+
+  assert_double_equal(ins_vector_nrm2(v), 5.0, 0.0);
+
+  // Check v's data
+  assert_double_equal(v->data[0], 3.0, 0.0);
+  assert_double_equal(v->data[1], 0.5, 0.0);
+  assert_double_equal(v->data[2], 0.0, 0.0);
+  assert_double_equal(v->data[3], 1.2, 0.0);
+  assert_double_equal(v->data[4], 4.0, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 2);
+  assert_non_null(v->block);
+  assert_ptr_equal(v->block->data, v->data);
+  assert_int_equal(v->block->size, 5);
+  assert_int_equal(v->owner, 1);
+  assert_ptr_equal(v->data, v_data);
+  assert_ptr_equal(v->block, v_block);
+
+  ins_vector_free(v);
+}
+
 int main(void) {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(test_scale_when_stride_is_one),
@@ -1760,7 +1830,9 @@ int main(void) {
     cmocka_unit_test(test_vector_dot_same_stride_one),
     cmocka_unit_test(test_vector_dot_same_stride_two),
     cmocka_unit_test(test_vector_dot_diff_strides),
-    cmocka_unit_test(test_vector_dot_diff_lengths)
+    cmocka_unit_test(test_vector_dot_diff_lengths),
+    cmocka_unit_test(test_vector_nrm2_stride_one),
+    cmocka_unit_test(test_vector_nrm2_stride_two)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);

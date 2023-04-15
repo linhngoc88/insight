@@ -269,3 +269,22 @@ INS_VECTOR_FUNC(dot)(const INS_VECTOR_TYPE *v, const INS_VECTOR_TYPE *w) {
 
 #endif
 }
+
+INS_NUMERIC_TYPE
+INS_VECTOR_FUNC(nrm2)(const INS_VECTOR_TYPE *v) {
+  const size_t size = v->size;
+  const size_t stride = v->stride;
+  const INS_NUMERIC_TYPE * data = v->data;
+
+#if defined(INS_USE_NUMERIC_TYPE_DOUBLE)
+
+  return cblas_dnrm2(size, data, stride);
+
+#elif defined(INS_USE_NUMERIC_TYPE_FLOAT)
+
+  return cblas_snrm2(size, data, stride);
+
+#else
+#error Unsupport operation
+#endif
+}

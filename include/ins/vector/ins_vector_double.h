@@ -166,7 +166,7 @@ int ins_vector_copy(ins_vector *dst, const ins_vector *src);
 double ins_vector_dot(const ins_vector *v, const ins_vector *w);
 
 // Computes and returns the Euclidean of the vector `v`.
-double ins_vector_nrm2(const ins_vector *);
+double ins_vector_nrm2(const ins_vector *v);
 
 /* Maximum and mininum elements
    -----------------------------------------------------------------------*/

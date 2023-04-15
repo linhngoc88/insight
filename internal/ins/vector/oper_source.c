@@ -233,3 +233,39 @@ INS_VECTOR_FUNC(copy)(INS_VECTOR_TYPE *dst, const INS_VECTOR_TYPE *src) {
 
   return INS_SUCCESS;
 }
+
+INS_NUMERIC_TYPE
+INS_VECTOR_FUNC(dot)(const INS_VECTOR_TYPE *v, const INS_VECTOR_TYPE *w) {
+  const size_t size = v->size;
+
+  if (w->size != size) {
+    INS_ERROR("vectors must have same length", INS_EINVAL);
+  }
+
+  const size_t v_stride = v->stride;
+  const size_t w_stride = w->stride;
+
+  const INS_NUMERIC_TYPE * v_data = v->data;
+  const INS_NUMERIC_TYPE * w_data = w->data;
+
+#if defined(INS_USE_NUMERIC_TYPE_DOUBLE)
+
+  return cblas_ddot(size, v_data, v_stride, w_data, w_stride);
+
+#elif defined(INS_USE_NUMERIC_TYPE_FLOAT)
+
+  return cblas_sdot(size, v_data, v_stride, w_data, w_stride);
+
+#else
+
+  size_t i;
+  INS_NUMERIC_TYPE ret = INS_NUMERIC_ZERO;
+
+  for (i = 0; i < size; ++i) {
+    ret += v_data[i * v_stride] * w_data[i * w_stride];
+  }
+
+  return ret;
+
+#endif
+}

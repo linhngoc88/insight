@@ -1239,6 +1239,246 @@ static void test_vector_swap_diff_lengths(void **state) {
   ins_vector_free(w);
 }
 
+static void test_vector_copy_same_stride_one(void **state) {
+  (void) state;
+
+  ins_vector *src = ins_vector_alloc(3);
+
+  src->data[0] = 2.5;
+  src->data[1] = 1.0;
+  src->data[2] = 4.0;
+
+  const double *src_data = src->data;
+  const ins_block *src_block = src->block;
+
+  ins_vector *dst = ins_vector_alloc(3);
+
+  dst->data[0] = -1.5;
+  dst->data[1] = 0.75;
+  dst->data[2] = 2.25;
+
+  const double *dst_data = dst->data;
+  const ins_block *dst_block = dst->block;
+
+  const int status = ins_vector_copy(dst, src);
+  assert_int_equal(status, INS_SUCCESS);
+
+  // Check src's data
+  assert_double_equal(src->data[0], 2.5, 0.0);
+  assert_double_equal(src->data[1], 1.0, 0.0);
+  assert_double_equal(src->data[2], 4.0, 0.0);
+
+  // Check dst's data
+  assert_double_equal(dst->data[0], 2.5, 0.0);
+  assert_double_equal(dst->data[1], 1.0, 0.0);
+  assert_double_equal(dst->data[2], 4.0, 0.0);
+
+  // Check src's state
+  assert_int_equal(src->size, 3);
+  assert_int_equal(src->stride, 1);
+  assert_non_null(src->block);
+  assert_ptr_equal(src->block->data, src->data);
+  assert_int_equal(src->block->size, src->size);
+  assert_int_equal(src->owner, 1);
+  assert_ptr_equal(src->data, src_data);
+  assert_ptr_equal(src->block, src_block);
+
+  // Check dst's state
+  assert_int_equal(dst->size, 3);
+  assert_int_equal(dst->stride, 1);
+  assert_non_null(dst->block);
+  assert_ptr_equal(dst->block->data, dst->data);
+  assert_int_equal(dst->block->size, dst->size);
+  assert_int_equal(dst->owner, 1);
+  assert_ptr_equal(dst->data, dst_data);
+  assert_ptr_equal(dst->block, dst_block);
+
+  ins_vector_free(dst);
+  ins_vector_free(src);
+}
+
+static void test_vector_copy_same_stride_two(void **state) {
+  (void) state;
+
+  // Init src
+
+  ins_vector *src = ins_vector_alloc(5);
+
+  src->size = 3;
+  src->stride = 2;
+
+  src->data[0] = 2.5;
+  src->data[1] = -0.75;
+  src->data[2] = 1.0;
+  src->data[3] = 3.15;
+  src->data[4] = 4.0;
+
+  const double *src_data = src->data;
+  const ins_block *src_block = src->block;
+
+  // Init dst
+
+  ins_vector *dst = ins_vector_alloc(5);
+
+  dst->size = 3;
+  dst->stride = 2;
+
+  dst->data[0] = -1.5;
+  dst->data[1] = 0.25;
+  dst->data[2] = 0.75;
+  dst->data[3] = 1.75;
+  dst->data[4] = 2.25;
+
+  const double *dst_data = dst->data;
+  const ins_block *dst_block = dst->block;
+
+  // Copy src to dst.
+  const int status = ins_vector_copy(dst, src);
+  assert_int_equal(status, INS_SUCCESS);
+
+  // Check src's data
+  assert_double_equal(src->data[0], 2.5, 0.0);
+  assert_double_equal(src->data[1], -0.75, 0.0);
+  assert_double_equal(src->data[2], 1.0, 0.0);
+  assert_double_equal(src->data[3], 3.15, 0.0);
+  assert_double_equal(src->data[4], 4.0, 0.0);
+
+  // Check dst's data
+  assert_double_equal(dst->data[0], 2.5, 0.0);
+  assert_double_equal(dst->data[1], 0.25, 0.0);
+  assert_double_equal(dst->data[2], 1.0, 0.0);
+  assert_double_equal(dst->data[3], 1.75, 0.0);
+  assert_double_equal(dst->data[4], 4.0, 0.0);
+
+  // Check src's elements
+  assert_double_equal(ins_vector_get(src, 0), 2.5, 0.0);
+  assert_double_equal(ins_vector_get(src, 1), 1.0, 0.0);
+  assert_double_equal(ins_vector_get(src, 2), 4.0, 0.0);
+
+  // Check dst's elements
+  assert_double_equal(ins_vector_get(dst, 0), 2.5, 0.0);
+  assert_double_equal(ins_vector_get(dst, 1), 1.0, 0.0);
+  assert_double_equal(ins_vector_get(dst, 2), 4.0, 0.0);
+
+  // Check src's state
+  assert_int_equal(src->size, 3);
+  assert_int_equal(src->stride, 2);
+  assert_non_null(src->block);
+  assert_ptr_equal(src->block->data, src->data);
+  assert_int_equal(src->block->size, 5);
+  assert_int_equal(src->owner, 1);
+  assert_ptr_equal(src->data, src_data);
+  assert_ptr_equal(src->block, src_block);
+
+  // Check dst's state
+  assert_int_equal(dst->size, 3);
+  assert_int_equal(dst->stride, 2);
+  assert_non_null(dst->block);
+  assert_ptr_equal(dst->block->data, dst->data);
+  assert_int_equal(dst->block->size, 5);
+  assert_int_equal(dst->owner, 1);
+  assert_ptr_equal(dst->data, dst_data);
+  assert_ptr_equal(dst->block, dst_block);
+
+  ins_vector_free(dst);
+  ins_vector_free(src);
+}
+
+static void test_vector_copy_diff_strides(void **state) {
+  (void) state;
+
+  // Init src
+
+  ins_vector *src = ins_vector_alloc(3);
+
+  src->data[0] = 2.5;
+  src->data[1] = 1.0;
+  src->data[2] = 4.0;
+
+  const double *src_data = src->data;
+  const ins_block *src_block = src->block;
+
+  // Init dst
+
+  ins_vector *dst = ins_vector_alloc(5);
+
+  dst->size = 3;
+  dst->stride = 2;
+
+  dst->data[0] = -1.5;
+  dst->data[1] = 0.25;
+  dst->data[2] = 0.75;
+  dst->data[3] = 1.75;
+  dst->data[4] = 2.25;
+
+  const double *dst_data = dst->data;
+  const ins_block *dst_block = dst->block;
+
+  // Copy src to dst.
+  const int status = ins_vector_copy(dst, src);
+  assert_int_equal(status, INS_SUCCESS);
+
+  // Check src's data
+  assert_double_equal(src->data[0], 2.5, 0.0);
+  assert_double_equal(src->data[1], 1.0, 0.0);
+  assert_double_equal(src->data[2], 4.0, 0.0);
+
+  // Check dst's data
+  assert_double_equal(dst->data[0], 2.5, 0.0);
+  assert_double_equal(dst->data[1], 0.25, 0.0);
+  assert_double_equal(dst->data[2], 1.0, 0.0);
+  assert_double_equal(dst->data[3], 1.75, 0.0);
+  assert_double_equal(dst->data[4], 4.0, 0.0);
+
+  // Check src's elements
+  assert_double_equal(ins_vector_get(src, 0), 2.5, 0.0);
+  assert_double_equal(ins_vector_get(src, 1), 1.0, 0.0);
+  assert_double_equal(ins_vector_get(src, 2), 4.0, 0.0);
+
+  // Check dst's elements
+  assert_double_equal(ins_vector_get(dst, 0), 2.5, 0.0);
+  assert_double_equal(ins_vector_get(dst, 1), 1.0, 0.0);
+  assert_double_equal(ins_vector_get(dst, 2), 4.0, 0.0);
+
+  // Check src's state
+  assert_int_equal(src->size, 3);
+  assert_int_equal(src->stride, 1);
+  assert_non_null(src->block);
+  assert_ptr_equal(src->block->data, src->data);
+  assert_int_equal(src->block->size, 3);
+  assert_int_equal(src->owner, 1);
+  assert_ptr_equal(src->data, src_data);
+  assert_ptr_equal(src->block, src_block);
+
+  // Check dst's state
+  assert_int_equal(dst->size, 3);
+  assert_int_equal(dst->stride, 2);
+  assert_non_null(dst->block);
+  assert_ptr_equal(dst->block->data, dst->data);
+  assert_int_equal(dst->block->size, 5);
+  assert_int_equal(dst->owner, 1);
+  assert_ptr_equal(dst->data, dst_data);
+  assert_ptr_equal(dst->block, dst_block);
+
+  ins_vector_free(dst);
+  ins_vector_free(src);
+}
+
+static void test_vector_copy_diff_lengths(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+  ins_vector *w = ins_vector_alloc(2);
+
+  ins_set_error_handler_off();
+
+  assert_int_equal(ins_vector_copy(v, w), INS_EINVAL);
+  assert_int_equal(ins_vector_copy(w, v), INS_EINVAL);
+
+  ins_vector_free(w);
+  ins_vector_free(v);
+}
+
 int main(void) {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(test_scale_when_stride_is_one),
@@ -1271,7 +1511,11 @@ int main(void) {
     cmocka_unit_test(test_vector_swap_same_stride_one),
     cmocka_unit_test(test_vector_swap_same_stride_two),
     cmocka_unit_test(test_vector_swap_diff_strides),
-    cmocka_unit_test(test_vector_swap_diff_lengths)
+    cmocka_unit_test(test_vector_swap_diff_lengths),
+    cmocka_unit_test(test_vector_copy_same_stride_one),
+    cmocka_unit_test(test_vector_copy_same_stride_two),
+    cmocka_unit_test(test_vector_copy_diff_strides),
+    cmocka_unit_test(test_vector_copy_diff_lengths)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);

@@ -198,3 +198,38 @@ int INS_VECTOR_FUNC(swap)(INS_VECTOR_TYPE * v, INS_VECTOR_TYPE * w) {
 
   return INS_SUCCESS;
 }
+
+int
+INS_VECTOR_FUNC(copy)(INS_VECTOR_TYPE *dst, const INS_VECTOR_TYPE *src) {
+  const size_t size = src->size;
+
+  if (dst->size != size) {
+    INS_ERROR("vectors must have same length", INS_EINVAL);
+  }
+
+  const size_t src_stride = src->stride;
+  const size_t dst_stride = dst->stride;
+
+  const INS_NUMERIC_TYPE * src_data = src->data;
+  INS_NUMERIC_TYPE * const dst_data = dst->data;
+
+#if defined(INS_USE_NUMERIC_TYPE_DOUBLE)
+
+  cblas_dcopy(size, src_data, src_stride, dst_data, dst_stride);
+
+#elif defined(INS_USE_NUMERIC_TYPE_FLOAT)
+
+  cblas_scopy(size, src_data, src_stride, dst_data, dst_stride);
+
+#else
+
+  size_t i;
+
+  for (i = 0; i < size; ++i) {
+    dst_data[i * dst_stride] = src_data[i * src_stride];
+  }
+
+#endif
+
+  return INS_SUCCESS;
+}

@@ -156,10 +156,10 @@ int ins_vector_axpy(double alpha, const ins_vector * x, ins_vector * y);
 // for success and `INS_EINVAL` if two vectors have different lengths.
 int ins_vector_swap(ins_vector *v, ins_vector *w);
 
-// Copies the elements of the vector `src` into the vector `dest`. The two
+// Copies the elements of the vector `src` into the vector `dst`. The two
 // vectors must have the same length. The return value is `INS_SUCCESS`
 // for success and `INS_EINVAL` if two vectors have different lengths.
-int ins_vector_copy(ins_vector *dest, const ins_vector *src);
+int ins_vector_copy(ins_vector *dst, const ins_vector *src);
 
 // Computes the dot product of the two vectors `v` and `w`. The two vectors
 // must have the same length.

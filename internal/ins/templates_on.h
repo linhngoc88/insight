@@ -5,7 +5,7 @@
 #define INS_NUMERIC_OUT_FORMAT "%g"
 #define INS_NUMERIC_ZERO 0.0
 #define INS_NUMERIC_ONE 1.0
-#elif defined(INS_USE_NUMERIC_TYPE_FLOAT)
+#elif defined(INS_BASE_FLOAT)
 #define INS_NUMERIC_TYPE float
 #define INS_FLOATING_POINT 1
 #define INS_NUMERIC_INPUT_FORMAT "%g"

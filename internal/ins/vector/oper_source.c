@@ -82,7 +82,7 @@ int INS_VECTOR_FUNC(scale)(INS_VECTOR_TYPE * x, INS_NUMERIC_TYPE alpha) {
 
   cblas_dscal(n, alpha, x->data, stride);
 
-#elif defined(INS_USE_NUMERIC_TYPE_FLOAT)
+#elif defined(INS_BASE_FLOAT)
 
   cblas_sscal(n, alpha, x->data, stride);
 
@@ -145,7 +145,7 @@ INS_VECTOR_FUNC(axpy)(INS_NUMERIC_TYPE alpha,
 
   cblas_daxpy(size, alpha, x->data, x_stride, y->data, y_stride);
 
-#elif defined(INS_USE_NUMERIC_TYPE_FLOAT)
+#elif defined(INS_BASE_FLOAT)
 
   cblas_saxpy(size, alpha, x->data, x_stride, y->data, y_stride);
 
@@ -179,7 +179,7 @@ int INS_VECTOR_FUNC(swap)(INS_VECTOR_TYPE * v, INS_VECTOR_TYPE * w) {
 
   cblas_dswap(size, v_data, v_stride, w_data, w_stride);
 
-#elif defined(INS_USE_NUMERIC_TYPE_FLOAT)
+#elif defined(INS_BASE_FLOAT)
 
   cblas_sswap(size, v_data, v_stride, w_data, w_stride);
 
@@ -217,7 +217,7 @@ INS_VECTOR_FUNC(copy)(INS_VECTOR_TYPE *dst, const INS_VECTOR_TYPE *src) {
 
   cblas_dcopy(size, src_data, src_stride, dst_data, dst_stride);
 
-#elif defined(INS_USE_NUMERIC_TYPE_FLOAT)
+#elif defined(INS_BASE_FLOAT)
 
   cblas_scopy(size, src_data, src_stride, dst_data, dst_stride);
 
@@ -252,7 +252,7 @@ INS_VECTOR_FUNC(dot)(const INS_VECTOR_TYPE *v, const INS_VECTOR_TYPE *w) {
 
   return cblas_ddot(size, v_data, v_stride, w_data, w_stride);
 
-#elif defined(INS_USE_NUMERIC_TYPE_FLOAT)
+#elif defined(INS_BASE_FLOAT)
 
   return cblas_sdot(size, v_data, v_stride, w_data, w_stride);
 
@@ -280,7 +280,7 @@ INS_VECTOR_FUNC(nrm2)(const INS_VECTOR_TYPE *v) {
 
   return cblas_dnrm2(size, data, stride);
 
-#elif defined(INS_USE_NUMERIC_TYPE_FLOAT)
+#elif defined(INS_BASE_FLOAT)
 
   return cblas_snrm2(size, data, stride);
 

@@ -119,7 +119,7 @@ INS_VECTOR_FUNC(sum)(const INS_VECTOR_TYPE * x) {
   const size_t stride = x->stride;
 
   size_t i;
-  INS_BASE sum = INS_NUMERIC_ZERO;
+  INS_BASE sum = INS_ZERO;
 
   for (i = 0; i < size; ++i) {
     sum += x->data[i * stride];
@@ -259,7 +259,7 @@ INS_VECTOR_FUNC(dot)(const INS_VECTOR_TYPE *v, const INS_VECTOR_TYPE *w) {
 #else
 
   size_t i;
-  INS_BASE ret = INS_NUMERIC_ZERO;
+  INS_BASE ret = INS_ZERO;
 
   for (i = 0; i < size; ++i) {
     ret += v_data[i * v_stride] * w_data[i * w_stride];

@@ -50,8 +50,8 @@
 #undef INS_NUMERIC_OUT_FORMAT
 #endif
 
-#ifdef INS_NUMERIC_ZERO
-#undef INS_NUMERIC_ZERO
+#ifdef INS_ZERO
+#undef INS_ZERO
 #endif
 
 #ifdef INS_NUMERIC_ONE

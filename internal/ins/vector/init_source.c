@@ -156,7 +156,7 @@ void INS_VECTOR_FUNC(set_zero)(INS_VECTOR_TYPE * v) {
   size_t i;
 
   for (i = 0; i < size; ++i) {
-    data[i * stride] = INS_NUMERIC_ZERO;
+    data[i * stride] = INS_ZERO;
   }
 }
 
@@ -180,7 +180,7 @@ void INS_VECTOR_FUNC(set_basis)(INS_VECTOR_TYPE * v, size_t i) {
   size_t j;
 
   for (j = 0; j < size; ++j) {
-    data[j * stride] = INS_NUMERIC_ZERO;
+    data[j * stride] = INS_ZERO;
   }
 
   data[i * stride] = INS_NUMERIC_ONE;

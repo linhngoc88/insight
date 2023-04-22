@@ -1,19 +1,19 @@
 #if defined(INS_BASE_DOUBLE)
-#define INS_NUMERIC_TYPE double
+#define INS_BASE double
 #define INS_FLOATING_POINT 1
 #define INS_NUMERIC_INPUT_FORMAT "%lg"
 #define INS_NUMERIC_OUT_FORMAT "%g"
 #define INS_NUMERIC_ZERO 0.0
 #define INS_NUMERIC_ONE 1.0
 #elif defined(INS_BASE_FLOAT)
-#define INS_NUMERIC_TYPE float
+#define INS_BASE float
 #define INS_FLOATING_POINT 1
 #define INS_NUMERIC_INPUT_FORMAT "%g"
 #define INS_NUMERIC_OUT_FORMAT "%g"
 #define INS_NUMERIC_ZERO 0.0F
 #define INS_NUMERIC_ONE 1.0F
 #elif defined(INS_USE_NUMERIC_TYPE_INT)
-#define INS_NUMERIC_TYPE int
+#define INS_BASE int
 #define INS_NUMERIC_INPUT_FORMAT "%d"
 #define INS_NUMERIC_OUT_FORMAT "%d"
 #define INS_NUMERIC_ZERO 0
@@ -31,8 +31,8 @@
 #define INS_FUNC(dir,name) CONCAT2(dir,name)
 #define INS_TYPE(dir) dir
 #else
-#define INS_FUNC(dir,name) CONCAT3(dir,INS_NUMERIC_TYPE,name)
-#define INS_TYPE(dir) CONCAT2(dir,INS_NUMERIC_TYPE)
+#define INS_FUNC(dir,name) CONCAT3(dir,INS_BASE,name)
+#define INS_TYPE(dir) CONCAT2(dir,INS_BASE)
 #endif
 
 //

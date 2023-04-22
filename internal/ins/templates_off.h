@@ -38,8 +38,8 @@
 #undef CONCAT2x
 #endif
 
-#ifdef INS_NUMERIC_TYPE
-#undef INS_NUMERIC_TYPE
+#ifdef INS_BASE
+#undef INS_BASE
 #endif
 
 #ifdef INS_NUMERIC_INPUT_FORMAT

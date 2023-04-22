@@ -10,7 +10,7 @@ INS_BLOCK_TYPE * INS_BLOCK_FUNC(alloc)(const size_t count) {
   if (block == 0) { return 0; }
 
   // Allocate memory for the block elements.
-  block->data = (INS_NUMERIC_TYPE *) malloc(count * sizeof(INS_NUMERIC_TYPE));
+  block->data = (INS_BASE *) malloc(count * sizeof(INS_BASE));
 
   // If block data allocation failed, free the allocated block, call the error
   // handler, and return 0 as the result.
@@ -29,7 +29,7 @@ INS_BLOCK_TYPE * INS_BLOCK_FUNC(calloc)(const size_t count) {
   if (block == 0) { return 0; }
 
   // Allocate memory for the block elements and initialize elements to 0
-  block->data = (INS_NUMERIC_TYPE *) calloc(count, sizeof(INS_NUMERIC_TYPE));
+  block->data = (INS_BASE *) calloc(count, sizeof(INS_BASE));
 
   // If block data allocation failed, free the allocated block, call the error
   // handler, and return 0 as the result.
@@ -50,7 +50,7 @@ void INS_BLOCK_FUNC(free)(INS_BLOCK_TYPE * block) {
 
 int INS_BLOCK_FUNC(fread)(INS_BLOCK_TYPE * block, FILE * stream) {
   const size_t nitems = block->size;
-  const size_t size = sizeof(INS_NUMERIC_TYPE);
+  const size_t size = sizeof(INS_BASE);
   const size_t nitems_read = fread(block->data, size, nitems, stream);
 
   // If the number of items read from the stream is not equal to the number
@@ -65,7 +65,7 @@ int INS_BLOCK_FUNC(fread)(INS_BLOCK_TYPE * block, FILE * stream) {
 
 int INS_BLOCK_FUNC(fwrite)(const INS_BLOCK_TYPE * block, FILE * stream) {
   const size_t nitems = block->size;
-  const size_t size = sizeof(INS_NUMERIC_TYPE);
+  const size_t size = sizeof(INS_BASE);
   const size_t nitems_written = fwrite(block->data, size, nitems, stream);
 
   // If the number of items written to the stream is not equal to the number
@@ -81,7 +81,7 @@ int INS_BLOCK_FUNC(fwrite)(const INS_BLOCK_TYPE * block, FILE * stream) {
 int INS_BLOCK_FUNC(fprintf)(const INS_BLOCK_TYPE * block, FILE * stream,
                             const char * format) {
   const size_t size = block->size;
-  const INS_NUMERIC_TYPE * data = block->data;
+  const INS_BASE * data = block->data;
 
   size_t i;
 
@@ -106,7 +106,7 @@ int INS_BLOCK_FUNC(fscanf)(INS_BLOCK_TYPE * block, FILE * stream) {
   const size_t size = block->size;
 
   size_t i;
-  INS_NUMERIC_TYPE tmp;
+  INS_BASE tmp;
 
   for (i = 0; i < size; ++i) {
     if (fscanf(stream, INS_NUMERIC_INPUT_FORMAT, &tmp) != 1) {

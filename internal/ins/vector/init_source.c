@@ -149,7 +149,7 @@ void INS_VECTOR_FUNC(free)(INS_VECTOR_TYPE * vector) {
 }
 
 void INS_VECTOR_FUNC(set_zero)(INS_VECTOR_TYPE * v) {
-  INS_NUMERIC_TYPE * const data = v->data;
+  INS_BASE * const data = v->data;
   const size_t size = v->size;
   const size_t stride = v->stride;
 
@@ -160,8 +160,8 @@ void INS_VECTOR_FUNC(set_zero)(INS_VECTOR_TYPE * v) {
   }
 }
 
-void INS_VECTOR_FUNC(set_all)(INS_VECTOR_TYPE * v, INS_NUMERIC_TYPE x) {
-  INS_NUMERIC_TYPE * const data = v->data;
+void INS_VECTOR_FUNC(set_all)(INS_VECTOR_TYPE * v, INS_BASE x) {
+  INS_BASE * const data = v->data;
   const size_t size = v->size;
   const size_t stride = v->stride;
 
@@ -173,7 +173,7 @@ void INS_VECTOR_FUNC(set_all)(INS_VECTOR_TYPE * v, INS_NUMERIC_TYPE x) {
 }
 
 void INS_VECTOR_FUNC(set_basis)(INS_VECTOR_TYPE * v, size_t i) {
-  INS_NUMERIC_TYPE * const data = v->data;
+  INS_BASE * const data = v->data;
   const size_t size = v->size;
   const size_t stride = v->stride;
 

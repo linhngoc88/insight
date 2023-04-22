@@ -2,20 +2,20 @@
 #define INS_BASE double
 #define INS_FLOATING_POINT 1
 #define INS_INPUT_FORMAT "%lg"
-#define INS_NUMERIC_OUT_FORMAT "%g"
+#define INS_OUTPUT_FORMAT "%g"
 #define INS_ZERO 0.0
 #define INS_ONE 1.0
 #elif defined(INS_BASE_FLOAT)
 #define INS_BASE float
 #define INS_FLOATING_POINT 1
 #define INS_INPUT_FORMAT "%g"
-#define INS_NUMERIC_OUT_FORMAT "%g"
+#define INS_OUTPUT_FORMAT "%g"
 #define INS_ZERO 0.0F
 #define INS_ONE 1.0F
 #elif defined(INS_USE_NUMERIC_TYPE_INT)
 #define INS_BASE int
 #define INS_INPUT_FORMAT "%d"
-#define INS_NUMERIC_OUT_FORMAT "%d"
+#define INS_OUTPUT_FORMAT "%d"
 #define INS_ZERO 0
 #define INS_ONE 1
 #else

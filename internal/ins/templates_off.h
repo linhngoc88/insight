@@ -46,8 +46,8 @@
 #undef INS_INPUT_FORMAT
 #endif
 
-#ifdef INS_NUMERIC_OUT_FORMAT
-#undef INS_NUMERIC_OUT_FORMAT
+#ifdef INS_OUTPUT_FORMAT
+#undef INS_OUTPUT_FORMAT
 #endif
 
 #ifdef INS_ZERO

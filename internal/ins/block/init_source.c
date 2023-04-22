@@ -109,7 +109,7 @@ int INS_BLOCK_FUNC(fscanf)(INS_BLOCK_TYPE * block, FILE * stream) {
   INS_BASE tmp;
 
   for (i = 0; i < size; ++i) {
-    if (fscanf(stream, INS_NUMERIC_INPUT_FORMAT, &tmp) != 1) {
+    if (fscanf(stream, INS_INPUT_FORMAT, &tmp) != 1) {
       INS_ERROR("fscanf failed", INS_EFAILED);
     }
     block->data[i] = tmp;

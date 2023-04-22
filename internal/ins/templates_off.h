@@ -14,12 +14,32 @@
 #undef INS_VECTOR_FUNC
 #endif
 
+#ifdef INS_QUALIFIED_VIEW
+#undef INS_QUALIFIED_VIEW
+#endif
+
+#ifdef INS_QUALIFIED_TYPE
+#undef INS_QUALIFIED_TYPE
+#endif
+
+#ifdef INS_VIEW
+#undef INS_VIEW
+#endif
+
 #ifdef INS_TYPE
 #undef INS_TYPE
 #endif
 
 #ifdef INS_FUNC
 #undef INS_FUNC
+#endif
+
+#ifdef CONCAT4
+#undef CONCAT4
+#endif
+
+#ifdef CONCAT4x
+#undef CONCAT4x
 #endif
 
 #ifdef CONCAT3
@@ -40,6 +60,10 @@
 
 #ifdef INS_BASE
 #undef INS_BASE
+#endif
+
+#ifdef INS_SHORT
+#undef INS_SHORT
 #endif
 
 #ifdef INS_INPUT_FORMAT

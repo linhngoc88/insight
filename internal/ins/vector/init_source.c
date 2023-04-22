@@ -183,5 +183,5 @@ void INS_VECTOR_FUNC(set_basis)(INS_VECTOR_TYPE * v, size_t i) {
     data[j * stride] = INS_ZERO;
   }
 
-  data[i * stride] = INS_NUMERIC_ONE;
+  data[i * stride] = INS_ONE;
 }

@@ -34,6 +34,12 @@
 #undef INS_FUNC
 #endif
 
+#ifndef INS_USE_QUALIFIER
+#ifdef INS_QUALIFIER
+#undef INS_QUALIFIER
+#endif
+#endif
+
 #ifdef CONCAT4
 #undef CONCAT4
 #endif

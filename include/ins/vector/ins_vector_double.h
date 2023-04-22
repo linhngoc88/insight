@@ -151,6 +151,23 @@ double ins_vector_sum(const ins_vector * x);
 // have the same length.
 int ins_vector_axpy(double alpha, const ins_vector * x, ins_vector * y);
 
+// Exchanges the elements of the vectors `v` and `w` by copying. The two
+// vectors must have the same length. The function returns `INS_SUCCESS`
+// for success and `INS_EINVAL` if two vectors have different lengths.
+int ins_vector_swap(ins_vector *v, ins_vector *w);
+
+// Copies the elements of the vector `src` into the vector `dst`. The two
+// vectors must have the same length. The return value is `INS_SUCCESS`
+// for success and `INS_EINVAL` if two vectors have different lengths.
+int ins_vector_copy(ins_vector *dst, const ins_vector *src);
+
+// Computes the dot product of the two vectors `v` and `w`. The two vectors
+// must have the same length.
+double ins_vector_dot(const ins_vector *v, const ins_vector *w);
+
+// Computes and returns the Euclidean norm of the vector `v`.
+double ins_vector_nrm2(const ins_vector *v);
+
 /* Maximum and mininum elements
    -----------------------------------------------------------------------*/
 

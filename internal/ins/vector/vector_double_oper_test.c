@@ -1038,6 +1038,758 @@ static void test_vector_axpy_diff_lengths(void **state) {
   ins_vector_free(x);
 }
 
+static void test_vector_swap_same_stride_one(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+  double * const v_data = v->data;
+
+  v_data[0] = 0.5;
+  v_data[1] = 2.0;
+  v_data[2] = 4.5;
+
+  ins_vector *w = ins_vector_alloc(3);
+  double * const w_data = w->data;
+
+  w_data[0] = -1.2;
+  w_data[1] = 0.25;
+  w_data[2] = 8.0;
+
+  const int status = ins_vector_swap(v, w);
+  assert_int_equal(status, INS_SUCCESS);
+
+  // Check v's data
+  assert_double_equal(v->data[0], -1.2, 0.0);
+  assert_double_equal(v->data[1], 0.25, 0.0);
+  assert_double_equal(v->data[2], 8.0, 0.0);
+
+  // Check w's data
+  assert_double_equal(w->data[0], 0.5, 0.0);
+  assert_double_equal(w->data[1], 2.0, 0.0);
+  assert_double_equal(w->data[2], 4.5, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 1);
+  assert_ptr_equal(v->data, v_data);
+  assert_non_null(v->block);
+  assert_ptr_equal(v->block->data, v_data);
+  assert_int_equal(v->owner, 1);
+
+  // Check w's state
+  assert_int_equal(w->size, 3);
+  assert_int_equal(w->stride, 1);
+  assert_ptr_equal(w->data, w_data);
+  assert_non_null(w->block);
+  assert_ptr_equal(w->block->data, w_data);
+  assert_int_equal(w->owner, 1);
+
+  ins_vector_free(w);
+  ins_vector_free(v);
+}
+
+static void test_vector_swap_same_stride_two(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(5);
+  double * const v_data = v->data;
+
+  v->size = 3;
+  v->stride = 2;
+
+  v_data[0] = 0.5;
+  v_data[1] = 1.0;
+  v_data[2] = 2.0;
+  v_data[3] = -2.5;
+  v_data[4] = 4.5;
+
+  ins_vector *w = ins_vector_alloc(5);
+  double * const w_data = w->data;
+
+  w->size = 3;
+  w->stride = 2;
+
+  w_data[0] = -1.2;
+  w_data[1] = 0.0;
+  w_data[2] = 0.25;
+  w_data[3] = 4.0;
+  w_data[4] = 8.0;
+
+  const int status = ins_vector_swap(v, w);
+  assert_int_equal(status, INS_SUCCESS);
+
+  // Check v's elements
+  assert_double_equal(ins_vector_get(v, 0), -1.2, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 0.25, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), 8.0, 0.0);
+
+  // Check w's elements
+  assert_double_equal(ins_vector_get(w, 0), 0.5, 0.0);
+  assert_double_equal(ins_vector_get(w, 1), 2.0, 0.0);
+  assert_double_equal(ins_vector_get(w, 2), 4.5, 0.0);
+
+  // Check v's data
+  assert_double_equal(v->data[0], -1.2, 0.0);
+  assert_double_equal(v->data[1], 1.0, 0.0);
+  assert_double_equal(v->data[2], 0.25, 0.0);
+  assert_double_equal(v->data[3], -2.5, 0.0);
+  assert_double_equal(v->data[4], 8.0, 0.0);
+
+  // Check w's data
+  assert_double_equal(w->data[0], 0.5, 0.0);
+  assert_double_equal(w->data[1], 0.0, 0.0);
+  assert_double_equal(w->data[2], 2.0, 0.0);
+  assert_double_equal(w->data[3], 4.0, 0.0);
+  assert_double_equal(w->data[4], 4.5, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 2);
+  assert_ptr_equal(v->data, v_data);
+  assert_non_null(v->block);
+  assert_ptr_equal(v->block->data, v_data);
+  assert_int_equal(v->owner, 1);
+
+  // Check w's state
+  assert_int_equal(w->size, 3);
+  assert_int_equal(w->stride, 2);
+  assert_ptr_equal(w->data, w_data);
+  assert_non_null(w->block);
+  assert_ptr_equal(w->block->data, w_data);
+  assert_int_equal(w->owner, 1);
+
+  ins_vector_free(w);
+  ins_vector_free(v);
+}
+
+static void test_vector_swap_diff_strides(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+  double * const v_data = v->data;
+
+  v_data[0] = 0.5;
+  v_data[1] = 2.0;
+  v_data[2] = 4.5;
+
+  ins_vector *w = ins_vector_alloc(5);
+  double * const w_data = w->data;
+
+  w->size = 3;
+  w->stride = 2;
+
+  w_data[0] = -1.2;
+  w_data[1] = 1.4;
+  w_data[2] = 0.25;
+  w_data[3] = 2.5;
+  w_data[4] = 8.0;
+
+  const int status = ins_vector_swap(v, w);
+  assert_int_equal(status, INS_SUCCESS);
+
+  // Check v's data & elements
+  assert_double_equal(v->data[0], -1.2, 0.0);
+  assert_double_equal(v->data[1], 0.25, 0.0);
+  assert_double_equal(v->data[2], 8.0, 0.0);
+
+  // Check w's elements
+  assert_double_equal(ins_vector_get(w, 0), 0.5, 0.0);
+  assert_double_equal(ins_vector_get(w, 1), 2.0, 0.0);
+  assert_double_equal(ins_vector_get(w, 2), 4.5, 0.0);
+
+  // Check w's data
+  assert_double_equal(w->data[0], 0.5, 0.0);
+  assert_double_equal(w->data[1], 1.4, 0.0);
+  assert_double_equal(w->data[2], 2.0, 0.0);
+  assert_double_equal(w->data[3], 2.5, 0.0);
+  assert_double_equal(w->data[4], 4.5, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 1);
+  assert_ptr_equal(v->data, v_data);
+  assert_non_null(v->block);
+  assert_ptr_equal(v->block->data, v_data);
+  assert_int_equal(v->owner, 1);
+
+  // Check w's state
+  assert_int_equal(w->size, 3);
+  assert_int_equal(w->stride, 2);
+  assert_ptr_equal(w->data, w_data);
+  assert_non_null(w->block);
+  assert_ptr_equal(w->block->data, w_data);
+  assert_int_equal(w->owner, 1);
+
+  ins_vector_free(w);
+  ins_vector_free(v);
+}
+
+static void test_vector_swap_diff_lengths(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+  ins_vector *w = ins_vector_alloc(5);
+
+  ins_set_error_handler_off();
+
+  assert_int_equal(ins_vector_swap(v, w), INS_EINVAL);
+  assert_int_equal(ins_vector_swap(w, v), INS_EINVAL);
+
+  ins_vector_free(v);
+  ins_vector_free(w);
+}
+
+static void test_vector_copy_same_stride_one(void **state) {
+  (void) state;
+
+  ins_vector *src = ins_vector_alloc(3);
+
+  src->data[0] = 2.5;
+  src->data[1] = 1.0;
+  src->data[2] = 4.0;
+
+  const double *src_data = src->data;
+  const ins_block *src_block = src->block;
+
+  ins_vector *dst = ins_vector_alloc(3);
+
+  dst->data[0] = -1.5;
+  dst->data[1] = 0.75;
+  dst->data[2] = 2.25;
+
+  const double *dst_data = dst->data;
+  const ins_block *dst_block = dst->block;
+
+  const int status = ins_vector_copy(dst, src);
+  assert_int_equal(status, INS_SUCCESS);
+
+  // Check src's data
+  assert_double_equal(src->data[0], 2.5, 0.0);
+  assert_double_equal(src->data[1], 1.0, 0.0);
+  assert_double_equal(src->data[2], 4.0, 0.0);
+
+  // Check dst's data
+  assert_double_equal(dst->data[0], 2.5, 0.0);
+  assert_double_equal(dst->data[1], 1.0, 0.0);
+  assert_double_equal(dst->data[2], 4.0, 0.0);
+
+  // Check src's state
+  assert_int_equal(src->size, 3);
+  assert_int_equal(src->stride, 1);
+  assert_non_null(src->block);
+  assert_ptr_equal(src->block->data, src->data);
+  assert_int_equal(src->block->size, src->size);
+  assert_int_equal(src->owner, 1);
+  assert_ptr_equal(src->data, src_data);
+  assert_ptr_equal(src->block, src_block);
+
+  // Check dst's state
+  assert_int_equal(dst->size, 3);
+  assert_int_equal(dst->stride, 1);
+  assert_non_null(dst->block);
+  assert_ptr_equal(dst->block->data, dst->data);
+  assert_int_equal(dst->block->size, dst->size);
+  assert_int_equal(dst->owner, 1);
+  assert_ptr_equal(dst->data, dst_data);
+  assert_ptr_equal(dst->block, dst_block);
+
+  ins_vector_free(dst);
+  ins_vector_free(src);
+}
+
+static void test_vector_copy_same_stride_two(void **state) {
+  (void) state;
+
+  // Init src
+
+  ins_vector *src = ins_vector_alloc(5);
+
+  src->size = 3;
+  src->stride = 2;
+
+  src->data[0] = 2.5;
+  src->data[1] = -0.75;
+  src->data[2] = 1.0;
+  src->data[3] = 3.15;
+  src->data[4] = 4.0;
+
+  const double *src_data = src->data;
+  const ins_block *src_block = src->block;
+
+  // Init dst
+
+  ins_vector *dst = ins_vector_alloc(5);
+
+  dst->size = 3;
+  dst->stride = 2;
+
+  dst->data[0] = -1.5;
+  dst->data[1] = 0.25;
+  dst->data[2] = 0.75;
+  dst->data[3] = 1.75;
+  dst->data[4] = 2.25;
+
+  const double *dst_data = dst->data;
+  const ins_block *dst_block = dst->block;
+
+  // Copy src to dst.
+  const int status = ins_vector_copy(dst, src);
+  assert_int_equal(status, INS_SUCCESS);
+
+  // Check src's data
+  assert_double_equal(src->data[0], 2.5, 0.0);
+  assert_double_equal(src->data[1], -0.75, 0.0);
+  assert_double_equal(src->data[2], 1.0, 0.0);
+  assert_double_equal(src->data[3], 3.15, 0.0);
+  assert_double_equal(src->data[4], 4.0, 0.0);
+
+  // Check dst's data
+  assert_double_equal(dst->data[0], 2.5, 0.0);
+  assert_double_equal(dst->data[1], 0.25, 0.0);
+  assert_double_equal(dst->data[2], 1.0, 0.0);
+  assert_double_equal(dst->data[3], 1.75, 0.0);
+  assert_double_equal(dst->data[4], 4.0, 0.0);
+
+  // Check src's elements
+  assert_double_equal(ins_vector_get(src, 0), 2.5, 0.0);
+  assert_double_equal(ins_vector_get(src, 1), 1.0, 0.0);
+  assert_double_equal(ins_vector_get(src, 2), 4.0, 0.0);
+
+  // Check dst's elements
+  assert_double_equal(ins_vector_get(dst, 0), 2.5, 0.0);
+  assert_double_equal(ins_vector_get(dst, 1), 1.0, 0.0);
+  assert_double_equal(ins_vector_get(dst, 2), 4.0, 0.0);
+
+  // Check src's state
+  assert_int_equal(src->size, 3);
+  assert_int_equal(src->stride, 2);
+  assert_non_null(src->block);
+  assert_ptr_equal(src->block->data, src->data);
+  assert_int_equal(src->block->size, 5);
+  assert_int_equal(src->owner, 1);
+  assert_ptr_equal(src->data, src_data);
+  assert_ptr_equal(src->block, src_block);
+
+  // Check dst's state
+  assert_int_equal(dst->size, 3);
+  assert_int_equal(dst->stride, 2);
+  assert_non_null(dst->block);
+  assert_ptr_equal(dst->block->data, dst->data);
+  assert_int_equal(dst->block->size, 5);
+  assert_int_equal(dst->owner, 1);
+  assert_ptr_equal(dst->data, dst_data);
+  assert_ptr_equal(dst->block, dst_block);
+
+  ins_vector_free(dst);
+  ins_vector_free(src);
+}
+
+static void test_vector_copy_diff_strides(void **state) {
+  (void) state;
+
+  // Init src
+
+  ins_vector *src = ins_vector_alloc(3);
+
+  src->data[0] = 2.5;
+  src->data[1] = 1.0;
+  src->data[2] = 4.0;
+
+  const double *src_data = src->data;
+  const ins_block *src_block = src->block;
+
+  // Init dst
+
+  ins_vector *dst = ins_vector_alloc(5);
+
+  dst->size = 3;
+  dst->stride = 2;
+
+  dst->data[0] = -1.5;
+  dst->data[1] = 0.25;
+  dst->data[2] = 0.75;
+  dst->data[3] = 1.75;
+  dst->data[4] = 2.25;
+
+  const double *dst_data = dst->data;
+  const ins_block *dst_block = dst->block;
+
+  // Copy src to dst.
+  const int status = ins_vector_copy(dst, src);
+  assert_int_equal(status, INS_SUCCESS);
+
+  // Check src's data
+  assert_double_equal(src->data[0], 2.5, 0.0);
+  assert_double_equal(src->data[1], 1.0, 0.0);
+  assert_double_equal(src->data[2], 4.0, 0.0);
+
+  // Check dst's data
+  assert_double_equal(dst->data[0], 2.5, 0.0);
+  assert_double_equal(dst->data[1], 0.25, 0.0);
+  assert_double_equal(dst->data[2], 1.0, 0.0);
+  assert_double_equal(dst->data[3], 1.75, 0.0);
+  assert_double_equal(dst->data[4], 4.0, 0.0);
+
+  // Check src's elements
+  assert_double_equal(ins_vector_get(src, 0), 2.5, 0.0);
+  assert_double_equal(ins_vector_get(src, 1), 1.0, 0.0);
+  assert_double_equal(ins_vector_get(src, 2), 4.0, 0.0);
+
+  // Check dst's elements
+  assert_double_equal(ins_vector_get(dst, 0), 2.5, 0.0);
+  assert_double_equal(ins_vector_get(dst, 1), 1.0, 0.0);
+  assert_double_equal(ins_vector_get(dst, 2), 4.0, 0.0);
+
+  // Check src's state
+  assert_int_equal(src->size, 3);
+  assert_int_equal(src->stride, 1);
+  assert_non_null(src->block);
+  assert_ptr_equal(src->block->data, src->data);
+  assert_int_equal(src->block->size, 3);
+  assert_int_equal(src->owner, 1);
+  assert_ptr_equal(src->data, src_data);
+  assert_ptr_equal(src->block, src_block);
+
+  // Check dst's state
+  assert_int_equal(dst->size, 3);
+  assert_int_equal(dst->stride, 2);
+  assert_non_null(dst->block);
+  assert_ptr_equal(dst->block->data, dst->data);
+  assert_int_equal(dst->block->size, 5);
+  assert_int_equal(dst->owner, 1);
+  assert_ptr_equal(dst->data, dst_data);
+  assert_ptr_equal(dst->block, dst_block);
+
+  ins_vector_free(dst);
+  ins_vector_free(src);
+}
+
+static void test_vector_copy_diff_lengths(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+  ins_vector *w = ins_vector_alloc(2);
+
+  ins_set_error_handler_off();
+
+  assert_int_equal(ins_vector_copy(v, w), INS_EINVAL);
+  assert_int_equal(ins_vector_copy(w, v), INS_EINVAL);
+
+  ins_vector_free(w);
+  ins_vector_free(v);
+}
+
+static void test_vector_dot_same_stride_one(void **state) {
+  (void) state;
+
+  // Init v
+
+  ins_vector *v = ins_vector_alloc(3);
+
+  v->data[0] = 2.0;
+  v->data[1] = 0.5;
+  v->data[2] = -1.0;
+
+  const double *v_data = v->data;
+  const ins_block *v_block = v->block;
+
+  // Init w
+
+  ins_vector *w = ins_vector_alloc(3);
+
+  w->data[0] = 4.0;
+  w->data[1] = 2.5;
+  w->data[2] = 3.0;
+
+  const double *w_data = w->data;
+  const ins_block *w_block = w->block;
+
+  assert_double_equal(ins_vector_dot(v, w), 6.25, 0.0);
+  assert_double_equal(ins_vector_dot(w, v), 6.25, 0.0);
+
+  // Check v's data
+  assert_double_equal(v->data[0], 2.0, 0.0);
+  assert_double_equal(v->data[1], 0.5, 0.0);
+  assert_double_equal(v->data[2], -1.0, 0.0);
+
+  // Check w's data
+  assert_double_equal(w->data[0], 4.0, 0.0);
+  assert_double_equal(w->data[1], 2.5, 0.0);
+  assert_double_equal(w->data[2], 3.0, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 1);
+  assert_non_null(v->block);
+  assert_ptr_equal(v->block->data, v->data);
+  assert_int_equal(v->block->size, 3);
+  assert_int_equal(v->owner, 1);
+  assert_ptr_equal(v->data, v_data);
+  assert_ptr_equal(v->block, v_block);
+
+  // Check w's state
+  assert_int_equal(w->size, 3);
+  assert_int_equal(w->stride, 1);
+  assert_non_null(w->block);
+  assert_ptr_equal(w->block->data, w->data);
+  assert_int_equal(w->block->size, 3);
+  assert_int_equal(w->owner, 1);
+  assert_ptr_equal(w->data, w_data);
+  assert_ptr_equal(w->block, w_block);
+
+  ins_vector_free(w);
+  ins_vector_free(v);
+}
+
+static void test_vector_dot_same_stride_two(void **state) {
+  (void) state;
+
+  // Init v
+
+  ins_vector *v = ins_vector_alloc(5);
+
+  v->data[0] = 2.0;
+  v->data[1] = -0.45;
+  v->data[2] = 0.5;
+  v->data[3] = 7.5;
+  v->data[4] = -1.0;
+
+  v->size = 3;
+  v->stride = 2;
+
+  const double *v_data = v->data;
+  const ins_block *v_block = v->block;
+
+  // Init w
+
+  ins_vector *w = ins_vector_alloc(5);
+
+  w->data[0] = 4.0;
+  w->data[1] = 0.15;
+  w->data[2] = 2.5;
+  w->data[3] = -0.5;
+  w->data[4] = 3.0;
+
+  w->size = 3;
+  w->stride = 2;
+
+  const double *w_data = w->data;
+  const ins_block *w_block = w->block;
+
+  assert_double_equal(ins_vector_dot(v, w), 6.25, 0.0);
+  assert_double_equal(ins_vector_dot(w, v), 6.25, 0.0);
+
+  // Check v's data
+  assert_double_equal(v->data[0], 2.0, 0.0);
+  assert_double_equal(v->data[1], -0.45, 0.0);
+  assert_double_equal(v->data[2], 0.5, 0.0);
+  assert_double_equal(v->data[3], 7.5, 0.0);
+  assert_double_equal(v->data[4], -1.0, 0.0);
+
+  // Check w's data
+  assert_double_equal(w->data[0], 4.0, 0.0);
+  assert_double_equal(w->data[1], 0.15, 0.0);
+  assert_double_equal(w->data[2], 2.5, 0.0);
+  assert_double_equal(w->data[3], -0.5, 0.0);
+  assert_double_equal(w->data[4], 3.0, 0.0);
+
+  // Check v's elements
+  assert_double_equal(ins_vector_get(v, 0), 2.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 0.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), -1.0, 0.0);
+
+  // Check w's elements
+  assert_double_equal(ins_vector_get(w, 0), 4.0, 0.0);
+  assert_double_equal(ins_vector_get(w, 1), 2.5, 0.0);
+  assert_double_equal(ins_vector_get(w, 2), 3.0, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 2);
+  assert_non_null(v->block);
+  assert_ptr_equal(v->block->data, v->data);
+  assert_int_equal(v->block->size, 5);
+  assert_int_equal(v->owner, 1);
+  assert_ptr_equal(v->data, v_data);
+  assert_ptr_equal(v->block, v_block);
+
+  // Check w's state
+  assert_int_equal(w->size, 3);
+  assert_int_equal(w->stride, 2);
+  assert_non_null(w->block);
+  assert_ptr_equal(w->block->data, w->data);
+  assert_int_equal(w->block->size, 5);
+  assert_int_equal(w->owner, 1);
+  assert_ptr_equal(w->data, w_data);
+  assert_ptr_equal(w->block, w_block);
+
+  ins_vector_free(w);
+  ins_vector_free(v);
+}
+
+static void test_vector_dot_diff_strides(void **state) {
+  (void) state;
+
+  // Init v
+
+  ins_vector *v = ins_vector_alloc(3);
+
+  v->data[0] = 2.0;
+  v->data[1] = 0.5;
+  v->data[2] = -1.0;
+
+  const double *v_data = v->data;
+  const ins_block *v_block = v->block;
+
+  // Init w
+
+  ins_vector *w = ins_vector_alloc(5);
+
+  w->data[0] = 4.0;
+  w->data[1] = 0.15;
+  w->data[2] = 2.5;
+  w->data[3] = -0.5;
+  w->data[4] = 3.0;
+
+  w->size = 3;
+  w->stride = 2;
+
+  const double *w_data = w->data;
+  const ins_block *w_block = w->block;
+
+  assert_double_equal(ins_vector_dot(v, w), 6.25, 0.0);
+  assert_double_equal(ins_vector_dot(w, v), 6.25, 0.0);
+
+  // Check v's data
+  assert_double_equal(v->data[0], 2.0, 0.0);
+  assert_double_equal(v->data[1], 0.5, 0.0);
+  assert_double_equal(v->data[2], -1.0, 0.0);
+
+  // Check w's data
+  assert_double_equal(w->data[0], 4.0, 0.0);
+  assert_double_equal(w->data[1], 0.15, 0.0);
+  assert_double_equal(w->data[2], 2.5, 0.0);
+  assert_double_equal(w->data[3], -0.5, 0.0);
+  assert_double_equal(w->data[4], 3.0, 0.0);
+
+  // Check v's elements
+  assert_double_equal(ins_vector_get(v, 0), 2.0, 0.0);
+  assert_double_equal(ins_vector_get(v, 1), 0.5, 0.0);
+  assert_double_equal(ins_vector_get(v, 2), -1.0, 0.0);
+
+  // Check w's elements
+  assert_double_equal(ins_vector_get(w, 0), 4.0, 0.0);
+  assert_double_equal(ins_vector_get(w, 1), 2.5, 0.0);
+  assert_double_equal(ins_vector_get(w, 2), 3.0, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 1);
+  assert_non_null(v->block);
+  assert_ptr_equal(v->block->data, v->data);
+  assert_int_equal(v->block->size, 3);
+  assert_int_equal(v->owner, 1);
+  assert_ptr_equal(v->data, v_data);
+  assert_ptr_equal(v->block, v_block);
+
+  // Check w's state
+  assert_int_equal(w->size, 3);
+  assert_int_equal(w->stride, 2);
+  assert_non_null(w->block);
+  assert_ptr_equal(w->block->data, w->data);
+  assert_int_equal(w->block->size, 5);
+  assert_int_equal(w->owner, 1);
+  assert_ptr_equal(w->data, w_data);
+  assert_ptr_equal(w->block, w_block);
+
+  ins_vector_free(w);
+  ins_vector_free(v);
+}
+
+static void test_vector_dot_diff_lengths(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+  ins_vector *w = ins_vector_alloc(2);
+
+  ins_set_error_handler_off();
+  assert_int_equal(ins_vector_dot(v, w), INS_EINVAL);
+  assert_int_equal(ins_vector_dot(w, v), INS_EINVAL);
+
+  ins_vector_free(w);
+  ins_vector_free(v);
+}
+
+static void test_vector_nrm2_stride_one(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(3);
+  double * const v_data = v->data;
+  ins_block * const v_block = v->block;
+
+  v->data[0] = 3.0;
+  v->data[1] = 0.0;
+  v->data[2] = 4.0;
+
+  assert_double_equal(ins_vector_nrm2(v), 5.0, 0.0);
+
+  // Check v's data
+  assert_double_equal(v->data[0], 3.0, 0.0);
+  assert_double_equal(v->data[1], 0.0, 0.0);
+  assert_double_equal(v->data[2], 4.0, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 1);
+  assert_non_null(v->block);
+  assert_ptr_equal(v->block->data, v->data);
+  assert_int_equal(v->block->size, 3);
+  assert_int_equal(v->owner, 1);
+  assert_ptr_equal(v->data, v_data);
+  assert_ptr_equal(v->block, v_block);
+
+  ins_vector_free(v);
+}
+
+static void test_vector_nrm2_stride_two(void **state) {
+  (void) state;
+
+  ins_vector *v = ins_vector_alloc(5);
+
+  double * const v_data = v->data;
+  ins_block * const v_block = v->block;
+
+  v->size = 3;
+  v->stride = 2;
+
+  v->data[0] = 3.0;
+  v->data[1] = 0.5;
+  v->data[2] = 0.0;
+  v->data[3] = 1.2;
+  v->data[4] = 4.0;
+
+  assert_double_equal(ins_vector_nrm2(v), 5.0, 0.0);
+
+  // Check v's data
+  assert_double_equal(v->data[0], 3.0, 0.0);
+  assert_double_equal(v->data[1], 0.5, 0.0);
+  assert_double_equal(v->data[2], 0.0, 0.0);
+  assert_double_equal(v->data[3], 1.2, 0.0);
+  assert_double_equal(v->data[4], 4.0, 0.0);
+
+  // Check v's state
+  assert_int_equal(v->size, 3);
+  assert_int_equal(v->stride, 2);
+  assert_non_null(v->block);
+  assert_ptr_equal(v->block->data, v->data);
+  assert_int_equal(v->block->size, 5);
+  assert_int_equal(v->owner, 1);
+  assert_ptr_equal(v->data, v_data);
+  assert_ptr_equal(v->block, v_block);
+
+  ins_vector_free(v);
+}
+
 int main(void) {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(test_scale_when_stride_is_one),
@@ -1066,7 +1818,21 @@ int main(void) {
     cmocka_unit_test(test_vector_axpy_same_length_same_stride_one),
     cmocka_unit_test(test_vector_axpy_same_length_same_stride_two),
     cmocka_unit_test(test_vector_axpy_same_length_diff_strides),
-    cmocka_unit_test(test_vector_axpy_diff_lengths)
+    cmocka_unit_test(test_vector_axpy_diff_lengths),
+    cmocka_unit_test(test_vector_swap_same_stride_one),
+    cmocka_unit_test(test_vector_swap_same_stride_two),
+    cmocka_unit_test(test_vector_swap_diff_strides),
+    cmocka_unit_test(test_vector_swap_diff_lengths),
+    cmocka_unit_test(test_vector_copy_same_stride_one),
+    cmocka_unit_test(test_vector_copy_same_stride_two),
+    cmocka_unit_test(test_vector_copy_diff_strides),
+    cmocka_unit_test(test_vector_copy_diff_lengths),
+    cmocka_unit_test(test_vector_dot_same_stride_one),
+    cmocka_unit_test(test_vector_dot_same_stride_two),
+    cmocka_unit_test(test_vector_dot_diff_strides),
+    cmocka_unit_test(test_vector_dot_diff_lengths),
+    cmocka_unit_test(test_vector_nrm2_stride_one),
+    cmocka_unit_test(test_vector_nrm2_stride_two)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);

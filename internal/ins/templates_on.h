@@ -12,7 +12,7 @@
 #define INS_OUTPUT_FORMAT "%g"
 #define INS_ZERO 0.0F
 #define INS_ONE 1.0F
-#elif defined(INS_USE_NUMERIC_TYPE_INT)
+#elif defined(INS_BASE_INT)
 #define INS_BASE int
 #define INS_INPUT_FORMAT "%d"
 #define INS_OUTPUT_FORMAT "%d"

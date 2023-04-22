@@ -1,4 +1,4 @@
-#if defined(INS_USE_NUMERIC_TYPE_DOUBLE)
+#if defined(INS_BASE_DOUBLE)
 #define INS_NUMERIC_TYPE double
 #define INS_FLOATING_POINT 1
 #define INS_NUMERIC_INPUT_FORMAT "%lg"
@@ -27,7 +27,7 @@
 #define CONCAT3x(a,b,c) a ## _ ## b ## _ ## c
 #define CONCAT3(a,b,c) CONCAT3x(a,b,c)
 
-#if defined(INS_USE_NUMERIC_TYPE_DOUBLE)
+#if defined(INS_BASE_DOUBLE)
 #define INS_FUNC(dir,name) CONCAT2(dir,name)
 #define INS_TYPE(dir) dir
 #else

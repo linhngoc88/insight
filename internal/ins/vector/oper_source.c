@@ -78,7 +78,7 @@ int INS_VECTOR_FUNC(scale)(INS_VECTOR_TYPE * x, INS_NUMERIC_TYPE alpha) {
   const size_t n = x->size;
   const size_t stride = x->stride;
 
-#if defined(INS_USE_NUMERIC_TYPE_DOUBLE)
+#if defined(INS_BASE_DOUBLE)
 
   cblas_dscal(n, alpha, x->data, stride);
 
@@ -141,7 +141,7 @@ INS_VECTOR_FUNC(axpy)(INS_NUMERIC_TYPE alpha,
   const size_t x_stride = x->stride;
   const size_t y_stride = y->stride;
 
-#if defined(INS_USE_NUMERIC_TYPE_DOUBLE)
+#if defined(INS_BASE_DOUBLE)
 
   cblas_daxpy(size, alpha, x->data, x_stride, y->data, y_stride);
 
@@ -175,7 +175,7 @@ int INS_VECTOR_FUNC(swap)(INS_VECTOR_TYPE * v, INS_VECTOR_TYPE * w) {
   INS_NUMERIC_TYPE * const v_data = v->data;
   INS_NUMERIC_TYPE * const w_data = w->data;
 
-#if defined(INS_USE_NUMERIC_TYPE_DOUBLE)
+#if defined(INS_BASE_DOUBLE)
 
   cblas_dswap(size, v_data, v_stride, w_data, w_stride);
 
@@ -213,7 +213,7 @@ INS_VECTOR_FUNC(copy)(INS_VECTOR_TYPE *dst, const INS_VECTOR_TYPE *src) {
   const INS_NUMERIC_TYPE * src_data = src->data;
   INS_NUMERIC_TYPE * const dst_data = dst->data;
 
-#if defined(INS_USE_NUMERIC_TYPE_DOUBLE)
+#if defined(INS_BASE_DOUBLE)
 
   cblas_dcopy(size, src_data, src_stride, dst_data, dst_stride);
 
@@ -248,7 +248,7 @@ INS_VECTOR_FUNC(dot)(const INS_VECTOR_TYPE *v, const INS_VECTOR_TYPE *w) {
   const INS_NUMERIC_TYPE * v_data = v->data;
   const INS_NUMERIC_TYPE * w_data = w->data;
 
-#if defined(INS_USE_NUMERIC_TYPE_DOUBLE)
+#if defined(INS_BASE_DOUBLE)
 
   return cblas_ddot(size, v_data, v_stride, w_data, w_stride);
 
@@ -276,7 +276,7 @@ INS_VECTOR_FUNC(nrm2)(const INS_VECTOR_TYPE *v) {
   const size_t stride = v->stride;
   const INS_NUMERIC_TYPE * data = v->data;
 
-#if defined(INS_USE_NUMERIC_TYPE_DOUBLE)
+#if defined(INS_BASE_DOUBLE)
 
   return cblas_dnrm2(size, data, stride);
 

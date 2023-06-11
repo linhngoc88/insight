@@ -14,12 +14,38 @@
 #undef INS_VECTOR_FUNC
 #endif
 
+#ifdef INS_QUALIFIED_VIEW
+#undef INS_QUALIFIED_VIEW
+#endif
+
+#ifdef INS_QUALIFIED_TYPE
+#undef INS_QUALIFIED_TYPE
+#endif
+
+#ifdef INS_VIEW
+#undef INS_VIEW
+#endif
+
 #ifdef INS_TYPE
 #undef INS_TYPE
 #endif
 
 #ifdef INS_FUNC
 #undef INS_FUNC
+#endif
+
+#ifndef INS_USE_QUALIFIER
+#ifdef INS_QUALIFIER
+#undef INS_QUALIFIER
+#endif
+#endif
+
+#ifdef CONCAT4
+#undef CONCAT4
+#endif
+
+#ifdef CONCAT4x
+#undef CONCAT4x
 #endif
 
 #ifdef CONCAT3
@@ -38,24 +64,28 @@
 #undef CONCAT2x
 #endif
 
-#ifdef INS_NUMERIC_TYPE
-#undef INS_NUMERIC_TYPE
+#ifdef INS_BASE
+#undef INS_BASE
 #endif
 
-#ifdef INS_NUMERIC_INPUT_FORMAT
-#undef INS_NUMERIC_INPUT_FORMAT
+#ifdef INS_SHORT
+#undef INS_SHORT
 #endif
 
-#ifdef INS_NUMERIC_OUT_FORMAT
-#undef INS_NUMERIC_OUT_FORMAT
+#ifdef INS_INPUT_FORMAT
+#undef INS_INPUT_FORMAT
 #endif
 
-#ifdef INS_NUMERIC_ZERO
-#undef INS_NUMERIC_ZERO
+#ifdef INS_OUTPUT_FORMAT
+#undef INS_OUTPUT_FORMAT
 #endif
 
-#ifdef INS_NUMERIC_ONE
-#undef INS_NUMERIC_ONE
+#ifdef INS_ZERO
+#undef INS_ZERO
+#endif
+
+#ifdef INS_ONE
+#undef INS_ONE
 #endif
 
 #ifdef INS_FLOATING_POINT

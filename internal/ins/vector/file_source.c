@@ -2,7 +2,7 @@ int INS_VECTOR_FUNC(fread)(INS_VECTOR_TYPE *v, FILE *stream) {
   const size_t size = v->size;
   const size_t stride = v->stride;
 
-  const size_t elem_size = sizeof(INS_NUMERIC_TYPE);
+  const size_t elem_size = sizeof(INS_BASE);
   size_t num_elems;
 
   if (stride == 1) {
@@ -30,7 +30,7 @@ int INS_VECTOR_FUNC(fwrite)(const INS_VECTOR_TYPE *v, FILE *stream) {
   const size_t size = v->size;
   const size_t stride = v->stride;
 
-  const size_t elem_size = sizeof(INS_NUMERIC_TYPE);
+  const size_t elem_size = sizeof(INS_BASE);
   size_t num_elems;
 
   if (stride == 1) {
@@ -59,7 +59,7 @@ int INS_VECTOR_FUNC(fprintf)(const INS_VECTOR_TYPE *v,
                              const char *format) {
   const size_t size = v->size;
   const size_t stride = v->stride;
-  const INS_NUMERIC_TYPE *data = v->data;
+  const INS_BASE *data = v->data;
 
   size_t i;
 
@@ -79,13 +79,13 @@ int INS_VECTOR_FUNC(fprintf)(const INS_VECTOR_TYPE *v,
 int INS_VECTOR_FUNC(fscanf)(INS_VECTOR_TYPE *v, FILE *stream) {
   const size_t size = v->size;
   const size_t stride = v->stride;
-  INS_NUMERIC_TYPE * const data = v->data;
+  INS_BASE * const data = v->data;
 
   size_t i;
-  INS_NUMERIC_TYPE tmp;
+  INS_BASE tmp;
 
   for (i = 0; i < size; ++i) {
-    if (fscanf(stream, INS_NUMERIC_INPUT_FORMAT, &tmp) != 1) {
+    if (fscanf(stream, INS_INPUT_FORMAT, &tmp) != 1) {
       INS_ERROR("fscanf failed", INS_EFAILED);
     }
     data[i * stride] = tmp;

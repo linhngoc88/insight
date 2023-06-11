@@ -1,10 +1,10 @@
-INS_NUMERIC_TYPE
+INS_BASE
 INS_VECTOR_FUNC(min)(const INS_VECTOR_TYPE *v) {
   const size_t size = v->size;
   const size_t stride = v->stride;
 
-  INS_NUMERIC_TYPE min = v->data[0 * stride];
-  INS_NUMERIC_TYPE cur;
+  INS_BASE min = v->data[0 * stride];
+  INS_BASE cur;
 
   size_t i;
 
@@ -28,13 +28,13 @@ INS_VECTOR_FUNC(min)(const INS_VECTOR_TYPE *v) {
   return min;
 }
 
-INS_NUMERIC_TYPE
+INS_BASE
 INS_VECTOR_FUNC(max)(const INS_VECTOR_TYPE *v) {
   const size_t size = v->size;
   const size_t stride = v->stride;
 
-  INS_NUMERIC_TYPE max = v->data[0 * stride];
-  INS_NUMERIC_TYPE cur;
+  INS_BASE max = v->data[0 * stride];
+  INS_BASE cur;
 
   size_t i;
 
@@ -60,15 +60,15 @@ INS_VECTOR_FUNC(max)(const INS_VECTOR_TYPE *v) {
 
 void
 INS_VECTOR_FUNC(minmax)(const INS_VECTOR_TYPE * v,
-                        INS_NUMERIC_TYPE * min_out,
-                        INS_NUMERIC_TYPE * max_out) {
+                        INS_BASE * min_out,
+                        INS_BASE * max_out) {
   const size_t size = v->size;
   const size_t stride = v->stride;
 
-  INS_NUMERIC_TYPE min = v->data[0 * stride];
-  INS_NUMERIC_TYPE max = min;
+  INS_BASE min = v->data[0 * stride];
+  INS_BASE max = min;
 
-  INS_NUMERIC_TYPE cur;
+  INS_BASE cur;
   size_t i;
 
   for (i = 0; i < size; ++i) {
@@ -103,8 +103,8 @@ INS_VECTOR_FUNC(min_index)(const INS_VECTOR_TYPE * v) {
   const size_t size = v->size;
   const size_t stride = v->stride;
 
-  INS_NUMERIC_TYPE min = v->data[0 * stride];
-  INS_NUMERIC_TYPE cur;
+  INS_BASE min = v->data[0 * stride];
+  INS_BASE cur;
 
   size_t imin = 0;
   size_t i;
@@ -135,8 +135,8 @@ INS_VECTOR_FUNC(max_index)(const INS_VECTOR_TYPE * v) {
   const size_t size = v->size;
   const size_t stride = v->stride;
 
-  INS_NUMERIC_TYPE max = v->data[0 * stride];
-  INS_NUMERIC_TYPE cur;
+  INS_BASE max = v->data[0 * stride];
+  INS_BASE cur;
 
   size_t imax = 0;
   size_t i;
@@ -169,9 +169,9 @@ INS_VECTOR_FUNC(minmax_index)(const INS_VECTOR_TYPE * v,
   const size_t size = v->size;
   const size_t stride = v->stride;
 
-  INS_NUMERIC_TYPE min = v->data[0 * stride];
-  INS_NUMERIC_TYPE max = min;
-  INS_NUMERIC_TYPE cur;
+  INS_BASE min = v->data[0 * stride];
+  INS_BASE max = min;
+  INS_BASE cur;
 
   size_t imin = 0;
   size_t imax = 0;
